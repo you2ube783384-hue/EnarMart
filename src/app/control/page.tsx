@@ -100,21 +100,21 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#dff8f6] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#e6f7f2] p-4">
       <div className="w-full max-w-md">
         <div className="bg-[#ffffff] rounded-2xl shadow-lg border p-8">
           {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="size-10 rounded-lg bg-[#000000] flex items-center justify-center">
-              <span className="text-[#ffffff] font-bold text-lg">D</span>
+            <div className="size-10 rounded-lg bg-[#00a67d] flex items-center justify-center">
+              <span className="text-white font-bold text-lg">D</span>
             </div>
             <span className="font-bold text-xl" style={{ fontFamily: "var(--font-poppins)" }}>DigiMarket</span>
           </div>
 
           {/* Lock icon */}
           <div className="flex justify-center mb-6">
-            <div className="size-16 rounded-full bg-[#dff8f6] flex items-center justify-center">
-              <FontAwesomeIcon icon={faLock} className="text-2xl text-[#000000]" />
+            <div className="size-16 rounded-full bg-[#e6f7f2] flex items-center justify-center">
+              <FontAwesomeIcon icon={faLock} className="text-2xl text-[#00a67d]" />
             </div>
           </div>
 
@@ -174,7 +174,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
 
             <Button
               type="submit"
-              className="w-full gap-2 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
+              className="w-full gap-2 bg-[#00a67d] text-white hover:bg-[#008f6b]"
               disabled={loading || !username || !password}
             >
               <FontAwesomeIcon
@@ -334,12 +334,12 @@ function ImageLibraryTab() {
 
       {/* Stats */}
       <div className="flex items-center gap-4 mb-5">
-        <div className="flex items-center gap-2 rounded-lg bg-[#dff8f6] px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-lg bg-[#e6f7f2] px-3 py-1.5">
           <FontAwesomeIcon icon={faImage} className="text-xs text-[#000000]/60" />
           <span className="text-xs font-medium">{images.length} image{images.length !== 1 ? "s" : ""}</span>
         </div>
         {searchQuery && (
-          <div className="flex items-center gap-2 rounded-lg bg-[#ffefb8] px-3 py-1.5">
+          <div className="flex items-center gap-2 rounded-lg bg-[#fff8e1] px-3 py-1.5">
             <FontAwesomeIcon icon={faSearch} className="text-xs text-[#000000]/60" />
             <span className="text-xs font-medium">{filteredImages.length} result{filteredImages.length !== 1 ? "s" : ""}</span>
           </div>
@@ -365,12 +365,12 @@ function ImageLibraryTab() {
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className="aspect-square rounded-lg bg-[#dff8f6] animate-pulse" />
+                <div key={i} className="aspect-square rounded-lg bg-[#e6f7f2] animate-pulse" />
               ))}
             </div>
           ) : images.length === 0 ? (
             <div className="text-center py-16">
-              <div className="size-16 rounded-full bg-[#ffefb8] flex items-center justify-center mx-auto mb-4">
+              <div className="size-16 rounded-full bg-[#fff8e1] flex items-center justify-center mx-auto mb-4">
                 <FontAwesomeIcon icon={faFolderOpen} className="text-2xl text-[#000000]" />
               </div>
               <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--font-poppins)" }}>No images yet</h3>
@@ -428,7 +428,7 @@ function ImageLibraryTab() {
           <div className="w-72 shrink-0 border-l pl-5 hidden md:block">
             <div className="sticky top-4 space-y-4">
               {/* Preview */}
-              <div className="relative aspect-square rounded-lg overflow-hidden bg-[#dff8f6] border">
+              <div className="relative aspect-square rounded-lg overflow-hidden bg-[#e6f7f2] border">
                 <Image
                   src={selectedImage.url}
                   alt={selectedImage.filename}
@@ -444,20 +444,20 @@ function ImageLibraryTab() {
                   {selectedImage.filename}
                 </h4>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="rounded-md bg-[#dff8f6] px-2 py-1.5">
+                  <div className="rounded-md bg-[#e6f7f2] px-2 py-1.5">
                     <span className="text-[#000000]/50 block">Size</span>
                     <span className="font-medium">{selectedImage.sizeFormatted}</span>
                   </div>
-                  <div className="rounded-md bg-[#dff8f6] px-2 py-1.5">
+                  <div className="rounded-md bg-[#e6f7f2] px-2 py-1.5">
                     <span className="text-[#000000]/50 block">Type</span>
                     <span className="font-medium uppercase">{selectedImage.extension}</span>
                   </div>
                 </div>
-                <div className="rounded-md bg-[#dff8f6] px-2 py-1.5 text-xs">
+                <div className="rounded-md bg-[#e6f7f2] px-2 py-1.5 text-xs">
                   <span className="text-[#000000]/50 block">Modified</span>
                   <span className="font-medium">{new Date(selectedImage.modifiedAt).toLocaleDateString()} {new Date(selectedImage.modifiedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
-                <div className="rounded-md bg-[#dff8f6] px-2 py-1.5 text-xs">
+                <div className="rounded-md bg-[#e6f7f2] px-2 py-1.5 text-xs">
                   <span className="text-[#000000]/50 block">URL</span>
                   <span className="font-medium break-all">{selectedImage.url}</span>
                 </div>
@@ -513,7 +513,7 @@ function ImageLibraryTab() {
       {selectedImage && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#ffffff] border-t shadow-lg p-3 z-50">
           <div className="flex items-center gap-3">
-            <div className="size-12 rounded-md overflow-hidden bg-[#dff8f6] shrink-0">
+            <div className="size-12 rounded-md overflow-hidden bg-[#e6f7f2] shrink-0">
               <Image
                 src={selectedImage.url}
                 alt={selectedImage.filename}
@@ -722,20 +722,20 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#dff8f6]">
+    <div className="min-h-screen bg-[#e6f7f2]">
       {/* Admin Header */}
       <header className="bg-[#000000] text-[#ffffff] sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="size-7 rounded-lg bg-[#ffefb8] flex items-center justify-center">
-                <span className="text-[#000000] font-bold text-xs">D</span>
+              <div className="size-7 rounded-lg bg-[#00a67d] flex items-center justify-center">
+                <span className="text-white font-bold text-xs">D</span>
               </div>
               <span className="font-bold text-sm" style={{ fontFamily: "var(--font-poppins)" }}>DigiMarket</span>
             </Link>
             <span className="text-[#ffffff]/30 mx-1">/</span>
             <span className="text-sm text-[#ffffff]/60 flex items-center gap-1.5">
-              <FontAwesomeIcon icon={faStar} className="text-[#ffefb8] text-xs" />
+              <FontAwesomeIcon icon={faStar} className="text-[#00a67d] text-xs" />
               Admin Panel
             </span>
           </div>
@@ -777,7 +777,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <TabsList>
                   <TabsTrigger value="products">
                     Products
-                    <Badge className="ml-2 bg-[#dff8f6] text-[#000000] text-[10px] border-0">
+                    <Badge className="ml-2 bg-[#e6f7f2] text-[#333333] text-[10px] border-0">
                       {products.length}
                     </Badge>
                   </TabsTrigger>
@@ -792,7 +792,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
                 <Button
                   size="sm"
-                  className="gap-1.5 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
+                  className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b]"
                   onClick={() => {
                     resetForm()
                     setActiveTab("add")
@@ -809,18 +809,18 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               {loading ? (
                 <div className="space-y-3">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-20 rounded-lg bg-[#dff8f6] animate-pulse" />
+                    <div key={i} className="h-20 rounded-lg bg-[#e6f7f2] animate-pulse" />
                   ))}
                 </div>
               ) : products.length === 0 ? (
                 <div className="text-center py-16">
-                  <div className="size-16 rounded-full bg-[#ffefb8] flex items-center justify-center mx-auto mb-4">
+                  <div className="size-16 rounded-full bg-[#fff8e1] flex items-center justify-center mx-auto mb-4">
                     <FontAwesomeIcon icon={faImage} className="text-2xl text-[#000000]" />
                   </div>
                   <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--font-poppins)" }}>No products yet</h3>
                   <p className="text-sm text-[#000000]/50 mb-4">Add your first product to get started</p>
                   <Button
-                    className="gap-1.5 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
+                    className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b]"
                     onClick={() => {
                       resetForm()
                       setActiveTab("add")
@@ -835,9 +835,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className="flex items-center gap-3 p-3 rounded-lg border hover:bg-[#dff8f6]/30 transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-lg border hover:bg-[#e6f7f2]/30 transition-colors"
                     >
-                      <div className="size-14 rounded-md overflow-hidden bg-[#dff8f6] shrink-0">
+                      <div className="size-14 rounded-md overflow-hidden bg-[#e6f7f2] shrink-0">
                         {product.imageUrl && (
                           <Image
                             src={product.imageUrl}
@@ -852,7 +852,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <div className="flex items-center gap-2">
                           <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
                           {product.featured && (
-                            <Badge className="bg-[#ffefb8] text-[#000000] text-[10px] border-0 shrink-0">
+                            <Badge className="bg-[#fff8e1] text-[#e67e22] text-[10px] border-0 shrink-0">
                               Featured
                             </Badge>
                           )}
@@ -909,7 +909,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <div className="space-y-2">
                   <Label>Product Image</Label>
                   <div className="flex gap-4 items-start">
-                    <div className="relative size-32 rounded-lg border-2 border-dashed overflow-hidden bg-[#dff8f6] shrink-0">
+                    <div className="relative size-32 rounded-lg border-2 border-dashed overflow-hidden bg-[#e6f7f2] shrink-0">
                       {imagePreview || form.imageUrl ? (
                         <>
                           <Image
@@ -1123,7 +1123,7 @@ export default function ControlPage() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#dff8f6]">
+      <div className="min-h-screen flex items-center justify-center bg-[#e6f7f2]">
         <div className="flex items-center gap-2 text-[#000000]/50">
           <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
           <span className="text-sm">Checking session...</span>
