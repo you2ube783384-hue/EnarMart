@@ -22,3 +22,23 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Category {
+  id            String         @id @default(cuid())
+  name          String         @unique
+  icon          String         @default("faFolder")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subcategories Subcategory[]
+}
+
+model Subcategory {
+  id         String   @id @default(cuid())
+  name       String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([name, categoryId])
+}

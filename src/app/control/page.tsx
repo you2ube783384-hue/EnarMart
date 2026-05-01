@@ -26,6 +26,20 @@ import {
   faArrowsRotate,
   faSearch,
   faCheck,
+  faCamera,
+  faPalette,
+  faFileAlt,
+  faFont,
+  faCube,
+  faIcons,
+  faFolder,
+  faChevronRight,
+  faTag,
+  faShapes,
+  faObjectGroup,
+  faPaintBrush,
+  faPencilRuler,
+  faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -64,6 +78,45 @@ interface LibraryImage {
   modifiedAt: string
   extension: string
 }
+
+interface CategoryItem {
+  id: string
+  name: string
+  icon: string
+  subcategoriesCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+interface SubcategoryItem {
+  id: string
+  name: string
+  categoryId: string
+  category?: { name: string }
+  createdAt: string
+  updatedAt: string
+}
+
+const FA_ICON_MAP: Record<string, string> = {
+  faFolder: "Folder",
+  faCamera: "Camera",
+  faPalette: "Palette",
+  faFileAlt: "File",
+  faFont: "Font",
+  faCube: "3D Cube",
+  faIcons: "Icons",
+  faImage: "Image",
+  faTag: "Tag",
+  faShapes: "Shapes",
+  faObjectGroup: "Vector",
+  faPaintBrush: "Paint Brush",
+  faPencilRuler: "Pencil Ruler",
+  faLayerGroup: "Layers",
+  faStar: "Star",
+  faSearch: "Search",
+}
+
+const FA_ICON_OPTIONS = Object.keys(FA_ICON_MAP)
 
 // ─── Login Form ──────────────────────────────────────────────────────────────
 
@@ -581,6 +634,574 @@ function ImageLibraryTab() {
   )
 }
 
+// ─── Icon helper ──────────────────────────────────────────────────────────────
+
+function getIconDefinition(iconName: string) {
+  const iconMap: Record<string, unknown> = {
+    faFolder, faCamera, faPalette, faFileAlt, faFont, faCube, faIcons,
+    faImage, faTag, faShapes, faObjectGroup, faPaintBrush, faPencilRuler, faLayerGroup,
+    faStar, faSearch,
+  }
+  return (iconMap[iconName] as ReturnType<typeof faFolder>) || faFolder
+}
+
+// ─── Categories Tab ───────────────────────────────────────────────────────────
+
+function CategoriesTab() {
+  const [categories, setCategories] = useState<CategoryItem[]>([])
+  const [subcategories, setSubcategories] = useState<SubcategoryItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryItem | null>(null)
+  const [catDeleting, setCatDeleting] = useState<string | null>(null)
+  const [subDeleting, setSubDeleting] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+
+  // Category form state
+  const [showCatForm, setShowCatForm] = useState(false)
+  const [editingCatId, setEditingCatId] = useState<string | null>(null)
+  const [catForm, setCatForm] = useState({ name: "", icon: "faFolder" })
+
+  // Subcategory form state
+  const [showSubForm, setShowSubForm] = useState(false)
+  const [editingSubId, setEditingSubId] = useState<string | null>(null)
+  const [subForm, setSubForm] = useState({ name: "" })
+
+  const fetchCategories = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch("/api/categories")
+      const data = await res.json()
+      setCategories(data)
+    } catch (error) {
+      console.error("Failed to fetch categories:", error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const fetchSubcategories = useCallback(async (categoryId: string) => {
+    try {
+      const res = await fetch(`/api/subcategories?categoryId=${categoryId}`)
+      const data = await res.json()
+      setSubcategories(data)
+    } catch (error) {
+      console.error("Failed to fetch subcategories:", error)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [fetchCategories])
+
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubcategories(selectedCategory.id)
+    } else {
+      setSubcategories([])
+    }
+  }, [selectedCategory, fetchSubcategories])
+
+  // ─── Category CRUD ────────────────────────────────────────────────────────────
+
+  const handleCatSubmit = async () => {
+    if (!catForm.name) return
+    setSaving(true)
+    try {
+      if (editingCatId) {
+        await fetch(`/api/categories/${editingCatId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(catForm),
+        })
+      } else {
+        await fetch("/api/categories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(catForm),
+        })
+      }
+      resetCatForm()
+      fetchCategories()
+    } catch (error) {
+      console.error("Failed to save category:", error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleCatEdit = (cat: CategoryItem) => {
+    setEditingCatId(cat.id)
+    setCatForm({ name: cat.name, icon: cat.icon })
+    setShowCatForm(true)
+  }
+
+  const handleCatDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this category? All its subcategories will also be deleted.")) return
+    setCatDeleting(id)
+    try {
+      await fetch(`/api/categories/${id}`, { method: "DELETE" })
+      if (selectedCategory?.id === id) {
+        setSelectedCategory(null)
+      }
+      fetchCategories()
+    } catch (error) {
+      console.error("Failed to delete category:", error)
+    } finally {
+      setCatDeleting(null)
+    }
+  }
+
+  const resetCatForm = () => {
+    setCatForm({ name: "", icon: "faFolder" })
+    setEditingCatId(null)
+    setShowCatForm(false)
+  }
+
+  // ─── Subcategory CRUD ─────────────────────────────────────────────────────────
+
+  const handleSubSubmit = async () => {
+    if (!subForm.name || !selectedCategory) return
+    setSaving(true)
+    try {
+      if (editingSubId) {
+        await fetch(`/api/subcategories/${editingSubId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: subForm.name }),
+        })
+      } else {
+        await fetch("/api/subcategories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: subForm.name, categoryId: selectedCategory.id }),
+        })
+      }
+      resetSubForm()
+      fetchSubcategories(selectedCategory.id)
+      fetchCategories()
+    } catch (error) {
+      console.error("Failed to save subcategory:", error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleSubEdit = (sub: SubcategoryItem) => {
+    setEditingSubId(sub.id)
+    setSubForm({ name: sub.name })
+    setShowSubForm(true)
+  }
+
+  const handleSubDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this subcategory?")) return
+    setSubDeleting(id)
+    try {
+      await fetch(`/api/subcategories/${id}`, { method: "DELETE" })
+      if (selectedCategory) {
+        fetchSubcategories(selectedCategory.id)
+        fetchCategories()
+      }
+    } catch (error) {
+      console.error("Failed to delete subcategory:", error)
+    } finally {
+      setSubDeleting(null)
+    }
+  }
+
+  const resetSubForm = () => {
+    setSubForm({ name: "" })
+    setEditingSubId(null)
+    setShowSubForm(false)
+  }
+
+  return (
+    <div className="p-6 mt-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
+        <div>
+          <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-poppins)" }}>
+            Categories & Subcategories
+          </h3>
+          <p className="text-sm text-[#000000]/50">
+            Manage product categories and their subcategories
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 h-9"
+            onClick={fetchCategories}
+          >
+            <FontAwesomeIcon icon={faRefresh} className="text-xs" />
+            Refresh
+          </Button>
+          <Button
+            size="sm"
+            className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-9"
+            onClick={() => {
+              resetCatForm()
+              setShowCatForm(true)
+            }}
+          >
+            <FontAwesomeIcon icon={faPlus} className="text-xs" />
+            Add Category
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="flex items-center gap-4 mb-5">
+        <div className="flex items-center gap-2 rounded-lg bg-[#e6f7f2] px-3 py-1.5">
+          <FontAwesomeIcon icon={faFolder} className="text-xs text-[#00a67d]" />
+          <span className="text-xs font-medium">{categories.length} categor{categories.length !== 1 ? "ies" : "y"}</span>
+        </div>
+        <div className="flex items-center gap-2 rounded-lg bg-[#fff8e1] px-3 py-1.5">
+          <FontAwesomeIcon icon={faTag} className="text-xs text-[#e67e22]" />
+          <span className="text-xs font-medium">{subcategories.length} subcategor{subcategories.length !== 1 ? "ies" : "y"}</span>
+        </div>
+      </div>
+
+      <div className="flex gap-5">
+        {/* Left: Categories list */}
+        <div className="flex-1 min-w-0">
+          {/* Add/Edit Category Form (inline) */}
+          {showCatForm && (
+            <div className="mb-4 p-4 rounded-lg border bg-[#e6f7f2]/50 space-y-3">
+              <h4 className="text-sm font-semibold" style={{ fontFamily: "var(--font-poppins)" }}>
+                {editingCatId ? "Edit Category" : "Add Category"}
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Name *</Label>
+                  <Input
+                    placeholder="e.g., Photos"
+                    value={catForm.name}
+                    onChange={(e) => setCatForm((prev) => ({ ...prev, name: e.target.value }))}
+                    className="h-9 text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Icon</Label>
+                  <Select
+                    value={catForm.icon}
+                    onValueChange={(value) => setCatForm((prev) => ({ ...prev, icon: value }))}
+                  >
+                    <SelectTrigger className="h-9 text-sm">
+                      <SelectValue placeholder="Select icon" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FA_ICON_OPTIONS.map((iconKey) => (
+                        <SelectItem key={iconKey} value={iconKey}>
+                          <span className="flex items-center gap-2">
+                            <FontAwesomeIcon icon={getIconDefinition(iconKey)} className="text-xs" />
+                            {FA_ICON_MAP[iconKey]}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-8 text-xs"
+                  onClick={handleCatSubmit}
+                  disabled={saving || !catForm.name}
+                >
+                  <FontAwesomeIcon icon={saving ? faSpinner : faCheck} className={`text-[0.65rem] ${saving ? "animate-spin" : ""}`} />
+                  {editingCatId ? "Update" : "Create"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={resetCatForm}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-16 rounded-lg bg-[#e6f7f2] animate-pulse" />
+              ))}
+            </div>
+          ) : categories.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="size-16 rounded-full bg-[#fff8e1] flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faFolder} className="text-2xl text-[#000000]" />
+              </div>
+              <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--font-poppins)" }}>No categories yet</h3>
+              <p className="text-sm text-[#000000]/50 mb-4">Create your first category to organize products</p>
+              <Button
+                className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b]"
+                onClick={() => {
+                  resetCatForm()
+                  setShowCatForm(true)
+                }}
+              >
+                <FontAwesomeIcon icon={faPlus} className="text-xs" />
+                Add Category
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
+              {categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    selectedCategory?.id === cat.id
+                      ? "bg-[#e6f7f2] border-[#00a67d]/30"
+                      : "hover:bg-[#e6f7f2]/30"
+                  }`}
+                  onClick={() => setSelectedCategory(selectedCategory?.id === cat.id ? null : cat)}
+                >
+                  <div className="size-10 rounded-md flex items-center justify-center bg-[#e6f7f2] shrink-0">
+                    <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[#00a67d]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{cat.name}</h4>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <Badge variant="outline" className="text-[10px] py-0 border-[#000000]/20 text-[#000000]/60">
+                        <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="mr-1 text-[0.5rem]" />
+                        {FA_ICON_MAP[cat.icon] || cat.icon}
+                      </Badge>
+                      <span className="text-[10px] text-[#000000]/50">
+                        {cat.subcategoriesCount} subcategor{cat.subcategoriesCount !== 1 ? "ies" : "y"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="size-8"
+                      onClick={() => handleCatEdit(cat)}
+                    >
+                      <FontAwesomeIcon icon={faPen} className="text-xs" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="size-8 text-destructive hover:text-destructive"
+                      onClick={() => handleCatDelete(cat.id)}
+                      disabled={catDeleting === cat.id}
+                    >
+                      <FontAwesomeIcon
+                        icon={catDeleting === cat.id ? faSpinner : faTrash}
+                        className={`text-xs ${catDeleting === cat.id ? "animate-spin" : ""}`}
+                      />
+                    </Button>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    className={`text-[#000000]/30 text-xs transition-transform ${
+                      selectedCategory?.id === cat.id ? "rotate-90" : ""
+                    }`}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right: Subcategories panel */}
+        {selectedCategory && (
+          <div className="w-80 shrink-0 border-l pl-5 hidden md:block">
+            <div className="sticky top-4 space-y-4">
+              {/* Category header */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="size-8 rounded-md flex items-center justify-center bg-[#e6f7f2]">
+                    <FontAwesomeIcon icon={getIconDefinition(selectedCategory.icon)} className="text-sm text-[#00a67d]" />
+                  </div>
+                  <h4 className="font-semibold text-sm" style={{ fontFamily: "var(--font-poppins)" }}>
+                    {selectedCategory.name}
+                  </h4>
+                </div>
+                <p className="text-xs text-[#000000]/50">
+                  Subcategories for {selectedCategory.name}
+                </p>
+              </div>
+
+              {/* Add Subcategory button */}
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full gap-1.5 text-xs"
+                onClick={() => {
+                  resetSubForm()
+                  setShowSubForm(true)
+                }}
+              >
+                <FontAwesomeIcon icon={faPlus} className="text-[0.65rem]" />
+                Add Subcategory
+              </Button>
+
+              {/* Add/Edit Subcategory Form */}
+              {showSubForm && (
+                <div className="p-3 rounded-lg border bg-[#fff8e1]/50 space-y-2">
+                  <Label className="text-xs">{editingSubId ? "Edit Subcategory" : "New Subcategory"}</Label>
+                  <Input
+                    placeholder="e.g., Nature Photography"
+                    value={subForm.name}
+                    onChange={(e) => setSubForm((prev) => ({ ...prev, name: e.target.value }))}
+                    className="h-8 text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-7 text-xs"
+                      onClick={handleSubSubmit}
+                      disabled={saving || !subForm.name}
+                    >
+                      <FontAwesomeIcon icon={saving ? faSpinner : faCheck} className={`text-[0.6rem] ${saving ? "animate-spin" : ""}`} />
+                      {editingSubId ? "Update" : "Add"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs"
+                      onClick={resetSubForm}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Subcategories list */}
+              <div className="space-y-1.5 max-h-[calc(100vh-420px)] overflow-y-auto">
+                {subcategories.length === 0 ? (
+                  <div className="text-center py-8">
+                    <FontAwesomeIcon icon={faTag} className="text-lg text-[#000000]/20 mb-2" />
+                    <p className="text-xs text-[#000000]/40">No subcategories yet</p>
+                  </div>
+                ) : (
+                  subcategories.map((sub) => (
+                    <div
+                      key={sub.id}
+                      className="flex items-center gap-2 p-2.5 rounded-md border hover:bg-[#e6f7f2]/30 transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faTag} className="text-[0.6rem] text-[#000000]/30" />
+                      <span className="flex-1 text-sm truncate">{sub.name}</span>
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="size-7"
+                          onClick={() => handleSubEdit(sub)}
+                        >
+                          <FontAwesomeIcon icon={faPen} className="text-[0.6rem]" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="size-7 text-destructive hover:text-destructive"
+                          onClick={() => handleSubDelete(sub.id)}
+                          disabled={subDeleting === sub.id}
+                        >
+                          <FontAwesomeIcon
+                            icon={subDeleting === sub.id ? faSpinner : faTrash}
+                            className={`text-[0.6rem] ${subDeleting === sub.id ? "animate-spin" : ""}`}
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile: Subcategories section (shown below on small screens) */}
+      {selectedCategory && (
+        <div className="md:hidden mt-5 border-t pt-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon icon={getIconDefinition(selectedCategory.icon)} className="text-sm text-[#00a67d]" />
+              <h4 className="font-semibold text-sm" style={{ fontFamily: "var(--font-poppins)" }}>
+                {selectedCategory.name} — Subcategories
+              </h4>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 text-xs h-8"
+              onClick={() => {
+                resetSubForm()
+                setShowSubForm(true)
+              }}
+            >
+              <FontAwesomeIcon icon={faPlus} className="text-[0.65rem]" />
+              Add
+            </Button>
+          </div>
+
+          {showSubForm && (
+            <div className="p-3 rounded-lg border bg-[#fff8e1]/50 space-y-2">
+              <Input
+                placeholder="Subcategory name"
+                value={subForm.name}
+                onChange={(e) => setSubForm((prev) => ({ ...prev, name: e.target.value }))}
+                className="h-8 text-sm"
+              />
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-7 text-xs"
+                  onClick={handleSubSubmit}
+                  disabled={saving || !subForm.name}
+                >
+                  {editingSubId ? "Update" : "Add"}
+                </Button>
+                <Button variant="outline" size="sm" className="h-7 text-xs" onClick={resetSubForm}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {subcategories.length === 0 ? (
+            <p className="text-xs text-[#000000]/40 text-center py-4">No subcategories yet</p>
+          ) : (
+            <div className="space-y-1.5">
+              {subcategories.map((sub) => (
+                <div
+                  key={sub.id}
+                  className="flex items-center gap-2 p-2.5 rounded-md border hover:bg-[#e6f7f2]/30 transition-colors"
+                >
+                  <FontAwesomeIcon icon={faTag} className="text-[0.6rem] text-[#000000]/30" />
+                  <span className="flex-1 text-sm truncate">{sub.name}</span>
+                  <Button size="icon" variant="ghost" className="size-7" onClick={() => handleSubEdit(sub)}>
+                    <FontAwesomeIcon icon={faPen} className="text-[0.6rem]" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-7 text-destructive hover:text-destructive"
+                    onClick={() => handleSubDelete(sub.id)}
+                    disabled={subDeleting === sub.id}
+                  >
+                    <FontAwesomeIcon icon={subDeleting === sub.id ? faSpinner : faTrash} className="text-[0.6rem]" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Admin Dashboard ─────────────────────────────────────────────────────────
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
@@ -603,7 +1224,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [activeTab, setActiveTab] = useState("products")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const categories = ["Photos", "Graphics", "Templates", "Fonts", "3D", "Icons"]
+  const [dbCategories, setDbCategories] = useState<string[]>(["Photos", "Graphics", "Templates", "Fonts", "3D", "Icons"])
 
   const emptyForm = {
     title: "",
@@ -628,9 +1249,27 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     }
   }, [])
 
+  const fetchDbCategories = useCallback(async () => {
+    try {
+      const res = await fetch("/api/categories")
+      const data = await res.json()
+      if (Array.isArray(data) && data.length > 0) {
+        const catNames = data.map((cat: CategoryItem) => cat.name)
+        setDbCategories(catNames)
+        // Update form default if current category not in list
+        if (form.category && !catNames.includes(form.category)) {
+          setForm((prev) => ({ ...prev, category: catNames[0] || "" }))
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories:", error)
+    }
+  }, [form.category])
+
   useEffect(() => {
     fetchProducts()
-  }, [fetchProducts])
+    fetchDbCategories()
+  }, [fetchProducts, fetchDbCategories])
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -789,6 +1428,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   </TabsTrigger>
                   <TabsTrigger value="add">
                     {editingId ? "Edit Product" : "Add Product"}
+                  </TabsTrigger>
+                  <TabsTrigger value="categories">
+                    <FontAwesomeIcon icon={faFolder} className="mr-1.5 text-xs" />
+                    Categories
                   </TabsTrigger>
                   <TabsTrigger value="library">
                     <FontAwesomeIcon icon={faFolderOpen} className="mr-1.5 text-xs" />
@@ -1027,7 +1670,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map((cat) => (
+                        {dbCategories.map((cat) => (
                           <SelectItem key={cat} value={cat}>
                             {cat}
                           </SelectItem>
@@ -1092,6 +1735,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   )}
                 </div>
               </div>
+            </TabsContent>
+
+            {/* Categories Tab */}
+            <TabsContent value="categories" className="mt-0">
+              <CategoriesTab />
             </TabsContent>
 
             {/* Library Tab */}
