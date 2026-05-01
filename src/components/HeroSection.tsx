@@ -1,26 +1,17 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowRight,
-  faCamera,
-  faPalette,
-  faTableColumns,
-  faFont,
-  faCube,
-  faShapes,
-} from "@fortawesome/free-solid-svg-icons"
+import { faArrowRight, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { getIconDefinition } from "@/lib/icon-helpers"
 import { Button } from "@/components/ui/button"
 
-const categoryCards = [
-  { name: "Photos", icon: faCamera },
-  { name: "Graphics", icon: faPalette },
-  { name: "Templates", icon: faTableColumns },
-  { name: "Fonts", icon: faFont },
-  { name: "3D", icon: faCube },
-  { name: "Icons", icon: faShapes },
-]
+interface HeroCategory {
+  id: string
+  name: string
+  icon: string
+  showInHero: boolean
+}
 
 interface CategoryCount {
   category: string
@@ -32,9 +23,31 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onCategoryClick }: HeroSectionProps) {
+  const [heroCategories, setHeroCategories] = useState<HeroCategory[]>([])
   const [categoryCounts, setCategoryCounts] = useState<CategoryCount[]>([])
   const [loading, setLoading] = useState(true)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
+  // Fetch categories with showInHero
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/categories")
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          // Only show categories where showInHero is true
+          setHeroCategories(data.filter((cat: HeroCategory) => cat.showInHero))
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error)
+      }
+    }
+    fetchCategories()
+  }, [])
+
+  // Fetch product counts
   useEffect(() => {
     async function fetchCounts() {
       try {
@@ -49,6 +62,45 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
     }
     fetchCounts()
   }, [])
+
+  // Check scroll position for arrows
+  const checkScroll = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 0)
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1)
+  }, [])
+
+  useEffect(() => {
+    checkScroll()
+    const el = scrollRef.current
+    if (el) {
+      el.addEventListener("scroll", checkScroll, { passive: true })
+      window.addEventListener("resize", checkScroll)
+      return () => {
+        el.removeEventListener("scroll", checkScroll)
+        window.removeEventListener("resize", checkScroll)
+      }
+    }
+  }, [checkScroll, heroCategories])
+
+  // Re-check after categories load
+  useEffect(() => {
+    const timer = setTimeout(checkScroll, 150)
+    return () => clearTimeout(timer)
+  }, [heroCategories, checkScroll])
+
+  const scrollCards = (direction: "left" | "right") => {
+    const el = scrollRef.current
+    if (!el) return
+    const cardWidth = el.querySelector("button")?.offsetWidth || 160
+    const gap = 16
+    const scrollAmount = cardWidth + gap
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    })
+  }
 
   const getCount = (categoryName: string) => {
     const found = categoryCounts.find((c) => c.category === categoryName)
@@ -101,27 +153,61 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Category Cards */}
+      {/* Category Cards with scroll */}
       <div className="max-w-7xl mx-auto px-4 lg:px-8 mt-4 pb-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-          {categoryCards.map((cat) => (
+        <div className="relative">
+          {/* Left scroll arrow */}
+          {canScrollLeft && (
             <button
-              key={cat.name}
-              onClick={() => onCategoryClick(cat.name)}
-              className="group bg-white border-[3px] border-[#e0e0e0] rounded-xl p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-[#00a67d]/40 cursor-pointer"
+              className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 size-10 rounded-full bg-white shadow-lg border border-[#e0e0e0] flex items-center justify-center text-[#666666] hover:text-[#00a67d] hover:border-[#00a67d]/40 transition-all cursor-pointer"
+              onClick={() => scrollCards("left")}
             >
-              {/* Icon */}
-              <div className="mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
-                <FontAwesomeIcon icon={cat.icon} className="text-[70px] text-[#333333]" />
-              </div>
-              <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
-                {cat.name}
-              </h3>
-              <p className="text-xs text-[#999999] mt-0.5">
-                {loading ? "..." : getCount(cat.name)}
-              </p>
+              <FontAwesomeIcon icon={faChevronLeft} className="text-sm" />
             </button>
-          ))}
+          )}
+
+          {/* Scrollable cards container */}
+          <div
+            ref={scrollRef}
+            className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-2"
+          >
+            {heroCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => onCategoryClick(cat.name)}
+                className="group bg-white border-[3px] border-[#e0e0e0] rounded-xl p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-[#00a67d]/40 cursor-pointer shrink-0 w-[140px] md:w-[160px] lg:w-auto lg:flex-1"
+              >
+                {/* Icon */}
+                <div className="mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
+                  <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[70px] text-[#333333]" />
+                </div>
+                <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+                  {cat.name}
+                </h3>
+                <p className="text-xs text-[#999999] mt-0.5">
+                  {loading ? "..." : getCount(cat.name)}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          {/* Right scroll arrow */}
+          {canScrollRight && (
+            <button
+              className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 size-10 rounded-full bg-white shadow-lg border border-[#e0e0e0] flex items-center justify-center text-[#666666] hover:text-[#00a67d] hover:border-[#00a67d]/40 transition-all cursor-pointer"
+              onClick={() => scrollCards("right")}
+            >
+              <FontAwesomeIcon icon={faChevronRight} className="text-sm" />
+            </button>
+          )}
+
+          {/* Fade edges to indicate more content */}
+          {canScrollLeft && (
+            <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+          )}
+          {canScrollRight && (
+            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+          )}
         </div>
       </div>
     </section>

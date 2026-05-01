@@ -55,6 +55,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getIconDefinition, FA_ICON_MAP, FA_ICON_OPTIONS } from "@/lib/icon-helpers"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -83,6 +84,8 @@ interface CategoryItem {
   id: string
   name: string
   icon: string
+  showInNav: boolean
+  showInHero: boolean
   subcategoriesCount: number
   createdAt: string
   updatedAt: string
@@ -96,27 +99,6 @@ interface SubcategoryItem {
   createdAt: string
   updatedAt: string
 }
-
-const FA_ICON_MAP: Record<string, string> = {
-  faFolder: "Folder",
-  faCamera: "Camera",
-  faPalette: "Palette",
-  faFileAlt: "File",
-  faFont: "Font",
-  faCube: "3D Cube",
-  faIcons: "Icons",
-  faImage: "Image",
-  faTag: "Tag",
-  faShapes: "Shapes",
-  faObjectGroup: "Vector",
-  faPaintBrush: "Paint Brush",
-  faPencilRuler: "Pencil Ruler",
-  faLayerGroup: "Layers",
-  faStar: "Star",
-  faSearch: "Search",
-}
-
-const FA_ICON_OPTIONS = Object.keys(FA_ICON_MAP)
 
 // ─── Login Form ──────────────────────────────────────────────────────────────
 
@@ -634,16 +616,7 @@ function ImageLibraryTab() {
   )
 }
 
-// ─── Icon helper ──────────────────────────────────────────────────────────────
-
-function getIconDefinition(iconName: string) {
-  const iconMap: Record<string, unknown> = {
-    faFolder, faCamera, faPalette, faFileAlt, faFont, faCube, faIcons,
-    faImage, faTag, faShapes, faObjectGroup, faPaintBrush, faPencilRuler, faLayerGroup,
-    faStar, faSearch,
-  }
-  return (iconMap[iconName] as ReturnType<typeof faFolder>) || faFolder
-}
+// ─── Icon helpers are imported from @/lib/icon-helpers ─────────────────────────
 
 // ─── Categories Tab ───────────────────────────────────────────────────────────
 
@@ -659,7 +632,7 @@ function CategoriesTab() {
   // Category form state
   const [showCatForm, setShowCatForm] = useState(false)
   const [editingCatId, setEditingCatId] = useState<string | null>(null)
-  const [catForm, setCatForm] = useState({ name: "", icon: "faFolder" })
+  const [catForm, setCatForm] = useState({ name: "", icon: "faFolder", showInNav: true, showInHero: true })
 
   // Subcategory form state
   const [showSubForm, setShowSubForm] = useState(false)
@@ -731,8 +704,21 @@ function CategoriesTab() {
 
   const handleCatEdit = (cat: CategoryItem) => {
     setEditingCatId(cat.id)
-    setCatForm({ name: cat.name, icon: cat.icon })
+    setCatForm({ name: cat.name, icon: cat.icon, showInNav: cat.showInNav, showInHero: cat.showInHero })
     setShowCatForm(true)
+  }
+
+  const handleCatToggle = async (id: string, field: "showInNav" | "showInHero", value: boolean) => {
+    try {
+      await fetch(`/api/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: value }),
+      })
+      fetchCategories()
+    } catch (error) {
+      console.error(`Failed to toggle ${field}:`, error)
+    }
   }
 
   const handleCatDelete = async (id: string) => {
@@ -752,7 +738,7 @@ function CategoriesTab() {
   }
 
   const resetCatForm = () => {
-    setCatForm({ name: "", icon: "faFolder" })
+    setCatForm({ name: "", icon: "faFolder", showInNav: true, showInHero: true })
     setEditingCatId(null)
     setShowCatForm(false)
   }
@@ -903,6 +889,33 @@ function CategoriesTab() {
                   </Select>
                 </div>
               </div>
+              {/* Visibility toggles */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex items-center gap-2.5 px-3 py-2 rounded-md border bg-white">
+                  <Switch
+                    id="cat-show-nav"
+                    checked={catForm.showInNav}
+                    onCheckedChange={(checked) => setCatForm((prev) => ({ ...prev, showInNav: checked }))}
+                    className="data-[state=checked]:bg-[#00a67d]"
+                  />
+                  <Label htmlFor="cat-show-nav" className="text-xs cursor-pointer flex items-center gap-1.5">
+                    <FontAwesomeIcon icon={faEye} className="text-[0.6rem] text-[#00a67d]" />
+                    Show in Navbar
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2.5 px-3 py-2 rounded-md border bg-white">
+                  <Switch
+                    id="cat-show-hero"
+                    checked={catForm.showInHero}
+                    onCheckedChange={(checked) => setCatForm((prev) => ({ ...prev, showInHero: checked }))}
+                    className="data-[state=checked]:bg-[#00a67d]"
+                  />
+                  <Label htmlFor="cat-show-hero" className="text-xs cursor-pointer flex items-center gap-1.5">
+                    <FontAwesomeIcon icon={faEye} className="text-[0.6rem] text-[#00a67d]" />
+                    Show in Hero Section
+                  </Label>
+                </div>
+              </div>
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -974,6 +987,33 @@ function CategoriesTab() {
                       <span className="text-[10px] text-[#000000]/50">
                         {cat.subcategoriesCount} subcategor{cat.subcategoriesCount !== 1 ? "ies" : "y"}
                       </span>
+                    </div>
+                    {/* Visibility badges */}
+                    <div className="flex items-center gap-2 mt-1.5" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full border transition-colors cursor-pointer ${
+                          cat.showInNav
+                            ? "bg-[#e6f7f2] border-[#00a67d]/30 text-[#00a67d]"
+                            : "bg-[#f5f5f5] border-[#e0e0e0] text-[#999999] line-through"
+                        }`}
+                        onClick={() => handleCatToggle(cat.id, "showInNav", !cat.showInNav)}
+                      >
+                        <FontAwesomeIcon icon={faEye} className="text-[0.5rem]" />
+                        Nav
+                      </button>
+                      <button
+                        type="button"
+                        className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full border transition-colors cursor-pointer ${
+                          cat.showInHero
+                            ? "bg-[#e6f7f2] border-[#00a67d]/30 text-[#00a67d]"
+                            : "bg-[#f5f5f5] border-[#e0e0e0] text-[#999999] line-through"
+                        }`}
+                        onClick={() => handleCatToggle(cat.id, "showInHero", !cat.showInHero)}
+                      >
+                        <FontAwesomeIcon icon={faEye} className="text-[0.5rem]" />
+                        Hero
+                      </button>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>

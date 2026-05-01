@@ -168,3 +168,12 @@ svg[data-prefix] {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #a3a3a3;
 }
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

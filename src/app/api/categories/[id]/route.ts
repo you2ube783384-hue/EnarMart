@@ -23,6 +23,8 @@ export async function PUT(
       data: {
         ...(body.name !== undefined && { name: body.name }),
         ...(body.icon !== undefined && { icon: body.icon }),
+        ...(body.showInNav !== undefined && { showInNav: body.showInNav }),
+        ...(body.showInHero !== undefined && { showInHero: body.showInHero }),
       },
     })
 

@@ -19,6 +19,8 @@ export async function GET() {
       id: cat.id,
       name: cat.name,
       icon: cat.icon,
+      showInNav: cat.showInNav,
+      showInHero: cat.showInHero,
       subcategoriesCount: cat._count.subcategories,
       createdAt: cat.createdAt,
       updatedAt: cat.updatedAt,
@@ -38,7 +40,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, icon } = body
+    const { name, icon, showInNav, showInHero } = body
 
     if (!name) {
       return NextResponse.json(
@@ -51,6 +53,8 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         icon: icon || 'faFolder',
+        ...(showInNav !== undefined && { showInNav }),
+        ...(showInHero !== undefined && { showInHero }),
       },
     })
 

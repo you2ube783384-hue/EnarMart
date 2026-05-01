@@ -1,23 +1,28 @@
 ---
 Task ID: 1
-Agent: Main
-Task: Major UI overhaul based on Creative Market design reference image
+Agent: main
+Task: Add show/hide category visibility controls for navbar and hero section with horizontal scroll
 
 Work Log:
-- Analyzed uploaded design image using VLM (Vision Language Model) to extract design patterns
-- Identified key design elements: clean white backgrounds, teal green accent (#00a67d), cream header (#FFF8E1), dark gray text (#333333), uppercase nav, rounded CTA buttons, section titles with "Explore" links, generous white space
-- Updated globals.css with new Creative Market-inspired color palette (teal primary, cream accents, refined grays)
-- Restyled Header: clean white with uppercase category nav, rounded search input, teal active states
-- Restyled HeroSection: light linen (#f8f5f2) background, left-aligned layout, teal CTA buttons with rounded-full style, category cards with individual icon colors
-- Restyled ProductGrid: cleaner cards with light borders, teal hover states, rounded "View Now" buttons, "Explore" link in section header
-- Restyled Footer: dark charcoal (#2c2c2c) with teal accents, newsletter signup section, refined typography
-- Updated admin control page branding: teal logo, teal buttons, cream/yellow featured badges
-- Cleared .next cache, restarted dev server, verified 200 responses
-- Ran lint - all passing
+- Updated Prisma schema: Added `showInNav` (Boolean, default true) and `showInHero` (Boolean, default true) fields to Category model
+- Ran `bun run db:push` to sync schema with database
+- Updated GET /api/categories to return showInNav and showInHero fields
+- Updated POST /api/categories to accept showInNav and showInHero when creating categories
+- Updated PUT /api/categories/[id] to handle showInNav and showInHero updates
+- Updated seed route to include showInNav and showInHero in default categories
+- Created shared /src/lib/icon-helpers.ts module with getIconDefinition, FA_ICON_MAP, and FA_ICON_OPTIONS exports
+- Updated admin panel (control/page.tsx): Added showInNav and showInHero to CategoryItem interface, form state, and reset/submit handlers
+- Added inline toggle badges (Nav/Hero) to each category row in the admin panel with quick-toggle functionality via handleCatToggle
+- Added Switch toggles for "Show in Navbar" and "Show in Hero Section" in the Add/Edit Category form
+- Rewrote Header.tsx: Now fetches categories from /api/categories, filters by showInNav, dynamically renders both top nav and sub-nav bar
+- Added horizontal scroll with left/right arrow buttons to sub-nav bar when categories overflow
+- Rewrote HeroSection.tsx: Now fetches categories from /api/categories, filters by showInHero, dynamically renders category cards
+- Added horizontal scroll with left/right circular arrow buttons and fade edges when categories overflow
+- Added scrollbar-none CSS class to globals.css for hiding scrollbars on horizontal scroll containers
+- All changes pass ESLint lint check
+- Tested API endpoints: GET returns showInNav/showInHero, PUT successfully updates them
 
 Stage Summary:
-- Complete UI restyle from flat mint/cream/black palette to Creative Market-inspired design
-- Key colors: #00a67d (teal), #fff8e1 (cream), #f8f5f2 (linen), #333333 (text), #666666/#999999 (secondary/muted text)
-- Clean, professional, spacious design with rounded buttons and subtle hover effects
-- All functionality preserved (search, categories, product cards, admin panel)
-- Dev server running, no errors
+- Categories can now be toggled visible/hidden in the navbar (showInNav) and hero section (showInHero) from the admin panel
+- Both the navbar sub-nav and hero section category cards support horizontal scrolling with arrow buttons when overflow occurs
+- Shared icon helper module prevents code duplication between admin panel, Header, and HeroSection

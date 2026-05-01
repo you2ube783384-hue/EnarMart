@@ -1,20 +1,19 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faBars, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faBars, faXmark, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { getIconDefinition } from "@/lib/icon-helpers"
 import { Input } from "@/components/ui/input"
 
-const categories = [
-  "Fonts",
-  "Templates",
-  "Graphics",
-  "Photos",
-  "3D",
-  "Icons",
-]
+interface NavCategory {
+  id: string
+  name: string
+  icon: string
+  showInNav: boolean
+}
 
 interface HeaderProps {
   onSearch: (query: string) => void
@@ -26,7 +25,66 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
   const [searchQuery, setSearchQuery] = useState("")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchExpanded, setSearchExpanded] = useState(false)
-  const searchInputRef = React.useRef<HTMLInputElement>(null)
+  const [navCategories, setNavCategories] = useState<NavCategory[]>([])
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const subNavScrollRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+
+  // Fetch categories with showInNav
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/categories")
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          // Only show categories where showInNav is true
+          setNavCategories(data.filter((cat: NavCategory) => cat.showInNav))
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error)
+      }
+    }
+    fetchCategories()
+  }, [])
+
+  // Check scroll position for arrows
+  const checkScroll = useCallback(() => {
+    const el = subNavScrollRef.current
+    if (!el) return
+    setCanScrollLeft(el.scrollLeft > 0)
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1)
+  }, [])
+
+  useEffect(() => {
+    checkScroll()
+    const el = subNavScrollRef.current
+    if (el) {
+      el.addEventListener("scroll", checkScroll, { passive: true })
+      window.addEventListener("resize", checkScroll)
+      return () => {
+        el.removeEventListener("scroll", checkScroll)
+        window.removeEventListener("resize", checkScroll)
+      }
+    }
+  }, [checkScroll, navCategories])
+
+  // Re-check after categories load
+  useEffect(() => {
+    // Small delay to let layout settle
+    const timer = setTimeout(checkScroll, 100)
+    return () => clearTimeout(timer)
+  }, [navCategories, checkScroll])
+
+  const scrollSubNav = (direction: "left" | "right") => {
+    const el = subNavScrollRef.current
+    if (!el) return
+    const scrollAmount = 200
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    })
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,6 +98,9 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
       onCategorySelect(category)
     }
   }
+
+  // Top nav categories (first 6 or all nav categories)
+  const topNavCategories = navCategories
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white">
@@ -110,17 +171,17 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
               searchExpanded ? "opacity-0 w-0 overflow-hidden pointer-events-none" : "opacity-100 w-auto"
             }`}
           >
-            {categories.map((category) => (
+            {topNavCategories.map((category) => (
               <button
-                key={category}
+                key={category.id}
                 className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
-                  activeCategory === category
+                  activeCategory === category.name
                     ? "text-[#00a67d] bg-[#e6f7f2]"
                     : "text-[#666666] hover:text-[#333333] hover:bg-[#f5f5f5]"
                 }`}
-                onClick={() => handleCategoryClick(category)}
+                onClick={() => handleCategoryClick(category.name)}
               >
-                {category}
+                {category.name}
               </button>
             ))}
           </nav>
@@ -137,80 +198,82 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
         </div>
       </div>
 
-      {/* Category sub-nav bar */}
-      <div className="hidden lg:block border-b border-[#e5e5e5] bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="flex items-center gap-6 overflow-x-auto py-2.5 text-sm scrollbar-none">
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect(null)}
+      {/* Category sub-nav bar with scroll arrows */}
+      {navCategories.length > 0 && (
+        <div className="hidden lg:block border-b border-[#e5e5e5] bg-[#fafafa]">
+          <div className="max-w-7xl mx-auto px-4 lg:px-8 relative">
+            {/* Left scroll arrow */}
+            {canScrollLeft && (
+              <button
+                className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#fafafa] to-transparent z-10 flex items-center justify-start pl-1 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer"
+                onClick={() => scrollSubNav("left")}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
+              </button>
+            )}
+
+            <div
+              ref={subNavScrollRef}
+              className="flex items-center gap-6 overflow-x-auto py-2.5 text-sm scrollbar-none"
             >
-              All Products
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("Photos")}
-            >
-              Stock Photos
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("Graphics")}
-            >
-              Vector Graphics
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("Templates")}
-            >
-              Design Templates
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("Fonts")}
-            >
-              Premium Fonts
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("3D")}
-            >
-              3D Assets
-            </button>
-            <span className="shrink-0 text-[#e5e5e5]">|</span>
-            <button
-              className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              onClick={() => onCategorySelect("Icons")}
-            >
-              Icon Packs
-            </button>
+              <button
+                className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
+                onClick={() => onCategorySelect(null)}
+              >
+                All Products
+              </button>
+              <span className="shrink-0 text-[#e5e5e5]">|</span>
+              {navCategories.map((category, idx) => (
+                <React.Fragment key={category.id}>
+                  <button
+                    className={`shrink-0 transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 ${
+                      activeCategory === category.name
+                        ? "text-[#00a67d]"
+                        : "text-[#999999] hover:text-[#00a67d]"
+                    }`}
+                    onClick={() => onCategorySelect(category.name)}
+                  >
+                    <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.6rem]" />
+                    {category.name}
+                  </button>
+                  {idx < navCategories.length - 1 && (
+                    <span className="shrink-0 text-[#e5e5e5]">|</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+            {/* Right scroll arrow */}
+            {canScrollRight && (
+              <button
+                className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#fafafa] to-transparent z-10 flex items-center justify-end pr-1 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer"
+                onClick={() => scrollSubNav("right")}
+              >
+                <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+              </button>
+            )}
           </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-b border-[#e5e5e5] bg-white p-4 shadow-sm">
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+            {navCategories.map((category) => (
               <button
-                key={category}
+                key={category.id}
                 className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-full transition-colors cursor-pointer ${
-                  activeCategory === category
+                  activeCategory === category.name
                     ? "text-[#00a67d] bg-[#e6f7f2] border border-[#00a67d]/20"
                     : "text-[#666666] bg-[#f5f5f5] hover:bg-[#e5e5e5] border border-transparent"
                 }`}
                 onClick={() => {
-                  handleCategoryClick(category)
+                  handleCategoryClick(category.name)
                   setMobileMenuOpen(false)
                 }}
               >
-                {category}
+                {category.name}
               </button>
             ))}
           </div>
