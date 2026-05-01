@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { ExternalLink, Heart, Eye } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faArrowUpRightFromSquare,
+  faHeart,
+  faEye,
+} from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -88,9 +93,9 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-md mx-auto">
           <div className="size-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-            <Eye className="size-8 text-muted-foreground" />
+            <FontAwesomeIcon icon={faEye} className="text-2xl text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">No products found</h3>
+          <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-poppins)" }}>No products found</h3>
           <p className="text-muted-foreground">
             {searchQuery
               ? `No results for "${searchQuery}". Try a different search term.`
@@ -108,7 +113,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
       {/* Section header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-poppins)" }}>
             {category ? category : "Featured Products"}
           </h2>
           <p className="text-muted-foreground mt-1">
@@ -161,7 +166,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                     e.stopPropagation()
                   }}
                 >
-                  <Heart className="size-3.5" />
+                  <FontAwesomeIcon icon={faHeart} className="text-xs" />
                 </Button>
               </div>
               {/* View Now overlay button */}
@@ -175,7 +180,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                       handleViewNow(product)
                     }}
                   >
-                    <ExternalLink className="size-3.5" />
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />
                     View Now
                   </Button>
                 </div>
@@ -189,14 +194,14 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                   {product.category}
                 </Badge>
               </div>
-              <h3 className="font-semibold text-sm line-clamp-1 mb-1 group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-sm line-clamp-1 mb-1 group-hover:text-primary transition-colors" style={{ fontFamily: "var(--font-poppins)" }}>
                 {product.title}
               </h3>
               <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
                 {product.description}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-lg font-bold">${product.price}</span>
+                <span className="text-lg font-bold" style={{ fontFamily: "var(--font-poppins)" }}>${product.price}</span>
                 <Button
                   size="sm"
                   className="gap-1.5 text-xs"
@@ -206,7 +211,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                   }}
                   disabled={!product.viewUrl}
                 >
-                  <ExternalLink className="size-3" />
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-[0.65rem]" />
                   {product.viewUrl ? "View Now" : "Coming Soon"}
                 </Button>
               </div>

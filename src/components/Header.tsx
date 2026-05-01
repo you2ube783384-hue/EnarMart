@@ -2,7 +2,8 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Search, Menu, X, Shield } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMagnifyingGlass, faBars, faXmark, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -52,7 +53,7 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
               className="h-7 gap-1.5 text-xs text-primary-foreground hover:bg-primary-foreground/10"
               onClick={onAdminClick}
             >
-              <Shield className="size-3.5" />
+              <FontAwesomeIcon icon={faShieldHalved} className="text-[0.65rem]" />
               Admin
             </Button>
           </div>
@@ -62,7 +63,7 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
       {/* Main nav */}
       <div className="container mx-auto flex h-16 items-center gap-4 px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl shrink-0">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ fontFamily: "var(--font-poppins)" }}>
           <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">D</span>
           </div>
@@ -72,7 +73,7 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
         {/* Search bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" />
             <Input
               type="search"
               placeholder="Search products..."
@@ -105,7 +106,7 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
           className="lg:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          <FontAwesomeIcon icon={mobileMenuOpen ? faXmark : faBars} className="text-lg" />
         </Button>
       </div>
 

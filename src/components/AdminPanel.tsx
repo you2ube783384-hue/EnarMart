@@ -2,17 +2,18 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-  Plus,
-  Pencil,
-  Trash2,
-  Upload,
-  X,
-  Star,
-  ExternalLink,
-  ImageIcon,
-  Loader2,
-} from "lucide-react"
+  faPlus,
+  faPen,
+  faTrash,
+  faUpload,
+  faXmark,
+  faStar,
+  faArrowUpRightFromSquare,
+  faImage,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -188,8 +189,8 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
         <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Star className="size-5 text-amber-500" />
+          <DialogTitle className="flex items-center gap-2 text-xl" style={{ fontFamily: "var(--font-poppins)" }}>
+            <FontAwesomeIcon icon={faStar} className="text-amber-500 text-sm" />
             Admin Panel
           </DialogTitle>
           <DialogDescription>
@@ -218,7 +219,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                   addTab?.click()
                 }}
               >
-                <Plus className="size-3.5" />
+                <FontAwesomeIcon icon={faPlus} className="text-xs" />
                 Add Product
               </Button>
             </div>
@@ -231,7 +232,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <ImageIcon className="size-12 text-muted-foreground mx-auto mb-3" />
+                <FontAwesomeIcon icon={faImage} className="text-3xl text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">No products yet. Add your first product!</p>
               </div>
             ) : (
@@ -254,7 +255,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-sm truncate">{product.title}</h4>
+                        <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
                         {product.featured && (
                           <Badge className="bg-amber-100 text-amber-700 text-[10px] border-0 shrink-0">
                             Featured
@@ -265,10 +266,10 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                         <Badge variant="outline" className="text-[10px] py-0">
                           {product.category}
                         </Badge>
-                        <span className="text-sm font-semibold">${product.price}</span>
+                        <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-poppins)" }}>${product.price}</span>
                         {product.viewUrl && (
                           <span className="text-[10px] text-green-600 flex items-center gap-0.5">
-                            <ExternalLink className="size-2.5" />
+                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-[0.5rem]" />
                             Linked
                           </span>
                         )}
@@ -285,7 +286,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                           addTab?.click()
                         }}
                       >
-                        <Pencil className="size-3.5" />
+                        <FontAwesomeIcon icon={faPen} className="text-xs" />
                       </Button>
                       <Button
                         size="icon"
@@ -294,11 +295,10 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                         onClick={() => handleDelete(product.id)}
                         disabled={deleting === product.id}
                       >
-                        {deleting === product.id ? (
-                          <Loader2 className="size-3.5 animate-spin" />
-                        ) : (
-                          <Trash2 className="size-3.5" />
-                        )}
+                        <FontAwesomeIcon
+                          icon={deleting === product.id ? faSpinner : faTrash}
+                          className={`text-xs ${deleting === product.id ? "animate-spin" : ""}`}
+                        />
                       </Button>
                     </div>
                   </div>
@@ -330,12 +330,12 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                             setImagePreview("")
                           }}
                         >
-                          <X className="size-3" />
+                          <FontAwesomeIcon icon={faXmark} className="text-xs" />
                         </button>
                       </>
                     ) : (
                       <div className="size-full flex flex-col items-center justify-center text-muted-foreground">
-                        <ImageIcon className="size-8 mb-1" />
+                        <FontAwesomeIcon icon={faImage} className="text-xl mb-1" />
                         <span className="text-[10px]">No image</span>
                       </div>
                     )}
@@ -355,11 +355,10 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading}
                     >
-                      {uploading ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <Upload className="size-4" />
-                      )}
+                      <FontAwesomeIcon
+                        icon={uploading ? faSpinner : faUpload}
+                        className={`text-sm ${uploading ? "animate-spin" : ""}`}
+                      />
                       {uploading ? "Uploading..." : "Upload Image"}
                     </Button>
                     <p className="text-xs text-muted-foreground">
@@ -440,7 +439,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
               {/* View Now URL */}
               <div className="space-y-2">
                 <Label htmlFor="viewUrl" className="flex items-center gap-1.5">
-                  <ExternalLink className="size-3.5" />
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />
                   View Now URL (Supaprofile Checkout)
                 </Label>
                 <Input
@@ -473,11 +472,10 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                   onClick={handleSubmit}
                   disabled={saving || !form.title || !form.description || !form.price}
                 >
-                  {saving ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Plus className="size-4" />
-                  )}
+                  <FontAwesomeIcon
+                    icon={saving ? faSpinner : faPlus}
+                    className={`text-sm ${saving ? "animate-spin" : ""}`}
+                  />
                   {editingId ? "Update Product" : "Add Product"}
                 </Button>
                 {editingId && (

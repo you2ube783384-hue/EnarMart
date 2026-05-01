@@ -1,16 +1,26 @@
 "use client"
 
 import React from "react"
-import { ArrowRight, Sparkles, Camera, Palette, Layout, Type, Box, Shapes } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faArrowRight,
+  faWandMagicSparkles,
+  faCamera,
+  faPalette,
+  faTableColumns,
+  faFont,
+  faCube,
+  faShapes,
+} from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 
 const categoryCards = [
-  { name: "Photos", icon: Camera, color: "from-orange-500 to-amber-500", count: "2,400+" },
-  { name: "Graphics", icon: Palette, color: "from-pink-500 to-rose-500", count: "1,800+" },
-  { name: "Templates", icon: Layout, color: "from-emerald-500 to-teal-500", count: "3,200+" },
-  { name: "Fonts", icon: Type, color: "from-violet-500 to-purple-500", count: "900+" },
-  { name: "3D", icon: Box, color: "from-cyan-500 to-sky-500", count: "600+" },
-  { name: "Icons", icon: Shapes, color: "from-yellow-500 to-orange-500", count: "5,000+" },
+  { name: "Photos", icon: faCamera, color: "from-orange-500 to-amber-500", count: "2,400+" },
+  { name: "Graphics", icon: faPalette, color: "from-pink-500 to-rose-500", count: "1,800+" },
+  { name: "Templates", icon: faTableColumns, color: "from-emerald-500 to-teal-500", count: "3,200+" },
+  { name: "Fonts", icon: faFont, color: "from-violet-500 to-purple-500", count: "900+" },
+  { name: "3D", icon: faCube, color: "from-cyan-500 to-sky-500", count: "600+" },
+  { name: "Icons", icon: faShapes, color: "from-yellow-500 to-orange-500", count: "5,000+" },
 ]
 
 interface HeroSectionProps {
@@ -35,10 +45,10 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
         <div className="container relative mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-1.5 text-sm text-white/80 mb-6 backdrop-blur-sm">
-              <Sparkles className="size-4 text-amber-400" />
+              <FontAwesomeIcon icon={faWandMagicSparkles} className="text-amber-400 text-xs" />
               <span>New products added daily</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight" style={{ fontFamily: "var(--font-poppins)" }}>
               Premium Digital Assets
               <br />
               <span className="bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent">
@@ -56,7 +66,7 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
                 onClick={() => onCategoryClick("Templates")}
               >
                 Explore Products
-                <ArrowRight className="ml-2 size-4" />
+                <FontAwesomeIcon icon={faArrowRight} className="ml-2 text-sm" />
               </Button>
               <Button
                 size="lg"
@@ -81,9 +91,9 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
               className="group relative overflow-hidden rounded-xl bg-card border shadow-sm p-4 md:p-5 text-left transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
             >
               <div className={`size-10 md:size-12 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`}>
-                <cat.icon className="size-5 md:size-6 text-white" />
+                <FontAwesomeIcon icon={cat.icon} className="text-white text-base md:text-lg" />
               </div>
-              <h3 className="font-semibold text-sm md:text-base">{cat.name}</h3>
+              <h3 className="font-semibold text-sm md:text-base" style={{ fontFamily: "var(--font-poppins)" }}>{cat.name}</h3>
               <p className="text-xs text-muted-foreground mt-0.5">{cat.count}</p>
               <div className={`absolute -bottom-8 -right-8 size-24 rounded-full bg-gradient-to-br ${cat.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
             </button>

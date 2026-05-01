@@ -2,16 +2,29 @@
 
 import React from "react"
 import Link from "next/link"
-import { Camera, Palette, Layout, Type, Box, Shapes, Mail, Github, Twitter } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faCamera,
+  faPalette,
+  faTableColumns,
+  faFont,
+  faCube,
+  faShapes,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons"
+import {
+  faGithub,
+  faXTwitter,
+} from "@fortawesome/free-brands-svg-icons"
 
 const footerLinks = {
   categories: [
-    { name: "Photos", icon: Camera, href: "#" },
-    { name: "Graphics", icon: Palette, href: "#" },
-    { name: "Templates", icon: Layout, href: "#" },
-    { name: "Fonts", icon: Type, href: "#" },
-    { name: "3D", icon: Box, href: "#" },
-    { name: "Icons", icon: Shapes, href: "#" },
+    { name: "Photos", icon: faCamera },
+    { name: "Graphics", icon: faPalette },
+    { name: "Templates", icon: faTableColumns },
+    { name: "Fonts", icon: faFont },
+    { name: "3D", icon: faCube },
+    { name: "Icons", icon: faShapes },
   ],
   company: [
     { name: "About Us", href: "#" },
@@ -41,7 +54,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl mb-4">
+            <Link href="/" className="flex items-center gap-2 font-bold text-xl mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
               <div className="size-8 rounded-lg bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">D</span>
               </div>
@@ -52,25 +65,25 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3">
               <a href="#" className="size-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                <Twitter className="size-4" />
+                <FontAwesomeIcon icon={faXTwitter} className="text-sm" />
               </a>
               <a href="#" className="size-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                <Github className="size-4" />
+                <FontAwesomeIcon icon={faGithub} className="text-sm" />
               </a>
               <a href="#" className="size-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                <Mail className="size-4" />
+                <FontAwesomeIcon icon={faEnvelope} className="text-sm" />
               </a>
             </div>
           </div>
 
           {/* Categories */}
           <div>
-            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">Categories</h3>
+            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80" style={{ fontFamily: "var(--font-poppins)" }}>Categories</h3>
             <ul className="space-y-2.5">
               {footerLinks.categories.map((link) => (
                 <li key={link.name}>
                   <button className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors">
-                    <link.icon className="size-3.5" />
+                    <FontAwesomeIcon icon={link.icon} className="text-xs" />
                     {link.name}
                   </button>
                 </li>
@@ -80,7 +93,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">Company</h3>
+            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80" style={{ fontFamily: "var(--font-poppins)" }}>Company</h3>
             <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -94,7 +107,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80">Legal</h3>
+            <h3 className="font-semibold text-sm uppercase tracking-wider mb-4 text-white/80" style={{ fontFamily: "var(--font-poppins)" }}>Legal</h3>
             <ul className="space-y-2.5">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>

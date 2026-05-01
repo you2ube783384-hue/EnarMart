@@ -64,7 +64,7 @@ export default function Home() {
         {!activeCategory && !searchQuery && (
           <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 md:py-20">
             <div className="container mx-auto px-4 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-poppins)" }}>
                 Ready to start selling?
               </h2>
               <p className="text-white/60 max-w-lg mx-auto mb-8">
