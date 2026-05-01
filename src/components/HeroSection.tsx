@@ -95,7 +95,15 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
       </div>
 
       {/* Category Cards - Glassmorphism */}
-      <div className="relative mt-4 z-10 pb-12">
+      <div className="relative mt-4 z-10 pb-12 overflow-hidden">
+        {/* Colorful background for glass blur effect */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#00a67d] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" />
+          <div className="absolute top-10 right-1/4 w-72 h-72 bg-[#e67e22] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{ animationDelay: "2s" }} />
+          <div className="absolute -bottom-10 left-1/2 w-72 h-72 bg-[#8e44ad] rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse" style={{ animationDelay: "4s" }} />
+          <div className="absolute top-1/2 left-10 w-48 h-48 bg-[#e74c3c] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-5 right-10 w-56 h-56 bg-[#f39c12] rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse" style={{ animationDelay: "3s" }} />
+        </div>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             {categoryCards.map((cat) => (
