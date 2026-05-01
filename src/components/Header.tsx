@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faBars, faXmark, faShieldHalved } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faBars, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -17,13 +17,12 @@ const categories = [
 ]
 
 interface HeaderProps {
-  onAdminClick: () => void
   onSearch: (query: string) => void
   onCategorySelect: (category: string | null) => void
   activeCategory: string | null
 }
 
-export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategory }: HeaderProps) {
+export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -44,19 +43,8 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Top bar */}
       <div className="bg-[#000000] text-[#ffffff]">
-        <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs">
+        <div className="container mx-auto flex h-9 items-center justify-center px-4 text-xs">
           <span>Discover 100,000+ premium digital products</span>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 gap-1.5 text-xs text-[#ffffff] hover:bg-[#ffffff]/10"
-              onClick={onAdminClick}
-            >
-              <FontAwesomeIcon icon={faShieldHalved} className="text-[0.65rem]" />
-              Admin
-            </Button>
-          </div>
         </div>
       </div>
 

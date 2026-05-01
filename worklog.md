@@ -139,3 +139,29 @@ Stage Summary:
 - Category card item counts now show real-time data from database
 - Browse Graphics button text is now clearly visible with #ffefb8 background
 - All gradients removed, only plain solid colors used
+
+---
+Task ID: 9
+Agent: Main Orchestrator
+Task: Remove CTA section, hide admin from customers, create /control admin route with login
+
+Work Log:
+- Removed "Ready to start selling?" CTA section from homepage (page.tsx)
+- Removed Admin button from Header component (no longer visible to customers)
+- Removed AdminPanel dialog import and usage from homepage
+- Removed onAdminClick prop from Header interface
+- Created /api/auth/login route - validates username:password (aalbaal:aalbaal), sets httpOnly session cookie
+- Created /api/auth/check route - checks if admin session cookie is valid
+- Created /api/auth/logout route - clears admin session cookie
+- Created /control page with login form (username + password fields, show/hide password toggle)
+- After successful login, shows full admin dashboard inline with: admin header (View Store, Refresh, Logout), products list, add/edit product form
+- Admin dashboard is a full-page layout with mint (#dff8f6) background, not a dialog
+- Simple WordPress-style auth: navigate to domain.com/control, enter credentials, manage products
+- Lint passes clean, all API endpoints tested and returning correct responses
+
+Stage Summary:
+- Customer-facing site has no admin access — completely clean storefront
+- Admin panel accessible only at /control with login (aalbaal/aalbaal)
+- Cookie-based session with 7-day expiry
+- Admin dashboard is a full page, not a dialog modal
+- Header simplified: no Admin button, just promo bar text centered
