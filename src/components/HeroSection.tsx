@@ -112,7 +112,7 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
             >
               {/* Icon */}
               <div className="mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
-                <FontAwesomeIcon icon={cat.icon} className="text-[144px] text-[#333333]" />
+                <FontAwesomeIcon icon={cat.icon} className="text-[70px] text-[#333333]" />
               </div>
               <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
                 {cat.name}
