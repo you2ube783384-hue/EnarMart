@@ -257,7 +257,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                       <div className="flex items-center gap-2">
                         <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
                         {product.featured && (
-                          <Badge className="bg-[#dff8f6] text-[#000000] text-[10px] border-0 shrink-0">
+                          <Badge className="bg-[#ffefb8] text-[#000000] text-[10px] border-0 shrink-0">
                             Featured
                           </Badge>
                         )}

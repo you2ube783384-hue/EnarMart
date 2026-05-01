@@ -92,7 +92,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
     return (
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-md mx-auto">
-          <div className="size-20 rounded-full bg-[#dff8f6] flex items-center justify-center mx-auto mb-4">
+          <div className="size-20 rounded-full bg-[#ffefb8] flex items-center justify-center mx-auto mb-4">
             <FontAwesomeIcon icon={faEye} className="text-2xl text-[#000000]" />
           </div>
           <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-poppins)" }}>No products found</h3>
@@ -124,7 +124,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
               : "Hand-picked digital products for your creative projects"}
           </p>
         </div>
-        <Badge className="text-sm bg-[#dff8f6] text-[#000000] border-0">
+        <Badge className="text-sm bg-[#ffefb8] text-[#000000] border-0">
           {products.length} product{products.length !== 1 ? "s" : ""}
         </Badge>
       </div>
@@ -152,7 +152,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
               <div className={`absolute inset-0 bg-[#000000]/0 group-hover:bg-[#000000]/10 transition-colors duration-300`} />
               {/* Featured badge */}
               {product.featured && (
-                <Badge className="absolute top-3 left-3 bg-[#000000] text-[#ffffff] border-0 text-xs">
+                <Badge className="absolute top-3 left-3 bg-[#ffefb8] text-[#000000] border-0 text-xs">
                   Featured
                 </Badge>
               )}

@@ -49,7 +49,7 @@ export default function Home() {
       <main className="flex-1">
         {/* Show hero only when no category or search filter is active */}
         {!activeCategory && !searchQuery && (
-          <HeroSection onCategoryClick={handleCategoryClick} />
+          <HeroSection key={productRefreshKey} onCategoryClick={handleCategoryClick} />
         )}
 
         <div id="products-section">
@@ -73,7 +73,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setAdminOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#dff8f6] px-8 py-3 text-sm font-medium text-[#000000] hover:bg-[#dff8f6]/80 transition-all"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#ffefb8] px-8 py-3 text-sm font-medium text-[#000000] hover:bg-[#ffefb8]/80 transition-all"
               >
                 Add Your First Product
               </button>

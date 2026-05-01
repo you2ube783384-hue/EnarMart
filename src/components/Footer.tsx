@@ -55,7 +55,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
-              <div className="size-8 rounded-lg bg-[#dff8f6] flex items-center justify-center">
+              <div className="size-8 rounded-lg bg-[#ffefb8] flex items-center justify-center">
                 <span className="text-[#000000] font-bold text-sm">D</span>
               </div>
               <span>DigiMarket</span>
