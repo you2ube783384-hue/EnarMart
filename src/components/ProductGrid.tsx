@@ -92,11 +92,11 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
     return (
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-md mx-auto">
-          <div className="size-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-            <FontAwesomeIcon icon={faEye} className="text-2xl text-muted-foreground" />
+          <div className="size-20 rounded-full bg-[#dff8f6] flex items-center justify-center mx-auto mb-4">
+            <FontAwesomeIcon icon={faEye} className="text-2xl text-[#000000]" />
           </div>
           <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-poppins)" }}>No products found</h3>
-          <p className="text-muted-foreground">
+          <p className="text-[#000000]/50">
             {searchQuery
               ? `No results for "${searchQuery}". Try a different search term.`
               : category
@@ -116,7 +116,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-poppins)" }}>
             {category ? category : "Featured Products"}
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-[#000000]/50 mt-1">
             {searchQuery
               ? `Search results for "${searchQuery}"`
               : category
@@ -124,7 +124,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
               : "Hand-picked digital products for your creative projects"}
           </p>
         </div>
-        <Badge variant="secondary" className="text-sm">
+        <Badge className="text-sm bg-[#dff8f6] text-[#000000] border-0">
           {products.length} product{products.length !== 1 ? "s" : ""}
         </Badge>
       </div>
@@ -134,13 +134,13 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
         {products.map((product) => (
           <div
             key={product.id}
-            className="group rounded-xl border bg-card overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+            className="group rounded-xl border bg-[#ffffff] overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
             onMouseEnter={() => setHoveredId(product.id)}
             onMouseLeave={() => setHoveredId(null)}
             onClick={() => handleCardClick(product)}
           >
             {/* Image */}
-            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#dff8f6]">
               <Image
                 src={product.imageUrl}
                 alt={product.title}
@@ -149,10 +149,10 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
               {/* Overlay on hover */}
-              <div className={`absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300`} />
+              <div className={`absolute inset-0 bg-[#000000]/0 group-hover:bg-[#000000]/10 transition-colors duration-300`} />
               {/* Featured badge */}
               {product.featured && (
-                <Badge className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white border-0 text-xs">
+                <Badge className="absolute top-3 left-3 bg-[#000000] text-[#ffffff] border-0 text-xs">
                   Featured
                 </Badge>
               )}
@@ -161,7 +161,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                 <Button
                   size="icon"
                   variant="secondary"
-                  className="size-8 rounded-full bg-white/90 hover:bg-white text-foreground shadow-sm"
+                  className="size-8 rounded-full bg-[#ffffff] hover:bg-[#dff8f6] text-[#000000] shadow-sm"
                   onClick={(e) => {
                     e.stopPropagation()
                   }}
@@ -174,7 +174,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                 <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${hoveredId === product.id ? 'opacity-100' : 'opacity-0'}`}>
                   <Button
                     size="sm"
-                    className="bg-white/95 text-foreground hover:bg-white shadow-lg gap-1.5"
+                    className="bg-[#ffffff] text-[#000000] hover:bg-[#dff8f6] shadow-lg gap-1.5"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleViewNow(product)
@@ -190,21 +190,21 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
             {/* Info */}
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="text-xs font-normal">
+                <Badge variant="outline" className="text-xs font-normal border-[#000000]/20 text-[#000000]/60">
                   {product.category}
                 </Badge>
               </div>
-              <h3 className="font-semibold text-sm line-clamp-1 mb-1 group-hover:text-primary transition-colors" style={{ fontFamily: "var(--font-poppins)" }}>
+              <h3 className="font-semibold text-sm line-clamp-1 mb-1 group-hover:text-[#000000] transition-colors" style={{ fontFamily: "var(--font-poppins)" }}>
                 {product.title}
               </h3>
-              <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+              <p className="text-xs text-[#000000]/50 line-clamp-2 mb-3">
                 {product.description}
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold" style={{ fontFamily: "var(--font-poppins)" }}>${product.price}</span>
                 <Button
                   size="sm"
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5 text-xs bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleViewNow(product)

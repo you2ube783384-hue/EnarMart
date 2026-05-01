@@ -62,18 +62,18 @@ export default function Home() {
 
         {/* Newsletter / CTA Section */}
         {!activeCategory && !searchQuery && (
-          <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 md:py-20">
+          <section className="bg-[#000000] py-16 md:py-20">
             <div className="container mx-auto px-4 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3" style={{ fontFamily: "var(--font-poppins)" }}>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#ffffff] mb-3" style={{ fontFamily: "var(--font-poppins)" }}>
                 Ready to start selling?
               </h2>
-              <p className="text-white/60 max-w-lg mx-auto mb-8">
+              <p className="text-[#ffffff]/60 max-w-lg mx-auto mb-8">
                 Join thousands of creators who are earning with their digital products. 
                 Upload, list, and sell — it&apos;s that simple.
               </p>
               <button
                 onClick={() => setAdminOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 px-8 py-3 text-sm font-medium text-white hover:from-orange-600 hover:to-pink-600 transition-all shadow-lg shadow-orange-500/25"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#dff8f6] px-8 py-3 text-sm font-medium text-[#000000] hover:bg-[#dff8f6]/80 transition-all"
               >
                 Add Your First Product
               </button>

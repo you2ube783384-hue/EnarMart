@@ -190,7 +190,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
         <DialogHeader className="px-6 pt-6 pb-0">
           <DialogTitle className="flex items-center gap-2 text-xl" style={{ fontFamily: "var(--font-poppins)" }}>
-            <FontAwesomeIcon icon={faStar} className="text-amber-500 text-sm" />
+            <FontAwesomeIcon icon={faStar} className="text-sm" />
             Admin Panel
           </DialogTitle>
           <DialogDescription>
@@ -207,12 +207,12 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
           {/* Products List Tab */}
           <TabsContent value="products" className="flex-1 overflow-y-auto px-6 pb-6 mt-0">
             <div className="flex items-center justify-between mb-4 mt-4">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#000000]/50">
                 {products.length} product{products.length !== 1 ? "s" : ""}
               </p>
               <Button
                 size="sm"
-                className="gap-1.5"
+                className="gap-1.5 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
                 onClick={() => {
                   resetForm()
                   const addTab = document.querySelector('[data-state="inactive"][value="add"]') as HTMLButtonElement
@@ -227,22 +227,22 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
             {loading ? (
               <div className="space-y-3">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-20 rounded-lg bg-muted animate-pulse" />
+                  <div key={i} className="h-20 rounded-lg bg-[#dff8f6] animate-pulse" />
                 ))}
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <FontAwesomeIcon icon={faImage} className="text-3xl text-muted-foreground mb-3" />
-                <p className="text-muted-foreground">No products yet. Add your first product!</p>
+                <FontAwesomeIcon icon={faImage} className="text-3xl text-[#000000]/30 mb-3" />
+                <p className="text-[#000000]/50">No products yet. Add your first product!</p>
               </div>
             ) : (
               <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                 {products.map((product) => (
                   <div
                     key={product.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg border hover:bg-[#dff8f6]/50 transition-colors"
                   >
-                    <div className="size-14 rounded-md overflow-hidden bg-muted shrink-0">
+                    <div className="size-14 rounded-md overflow-hidden bg-[#dff8f6] shrink-0">
                       {product.imageUrl && (
                         <Image
                           src={product.imageUrl}
@@ -257,18 +257,18 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                       <div className="flex items-center gap-2">
                         <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
                         {product.featured && (
-                          <Badge className="bg-amber-100 text-amber-700 text-[10px] border-0 shrink-0">
+                          <Badge className="bg-[#dff8f6] text-[#000000] text-[10px] border-0 shrink-0">
                             Featured
                           </Badge>
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <Badge variant="outline" className="text-[10px] py-0">
+                        <Badge variant="outline" className="text-[10px] py-0 border-[#000000]/20 text-[#000000]/60">
                           {product.category}
                         </Badge>
                         <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-poppins)" }}>${product.price}</span>
                         {product.viewUrl && (
-                          <span className="text-[10px] text-green-600 flex items-center gap-0.5">
+                          <span className="text-[10px] text-[#000000]/50 flex items-center gap-0.5">
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-[0.5rem]" />
                             Linked
                           </span>
@@ -314,7 +314,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
               <div className="space-y-2">
                 <Label>Product Image</Label>
                 <div className="flex gap-4 items-start">
-                  <div className="relative size-32 rounded-lg border-2 border-dashed overflow-hidden bg-muted shrink-0">
+                  <div className="relative size-32 rounded-lg border-2 border-dashed overflow-hidden bg-[#dff8f6] shrink-0">
                     {imagePreview || form.imageUrl ? (
                       <>
                         <Image
@@ -324,7 +324,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                           className="object-cover"
                         />
                         <button
-                          className="absolute top-1 right-1 size-5 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                          className="absolute top-1 right-1 size-5 rounded-full bg-[#000000]/60 text-[#ffffff] flex items-center justify-center hover:bg-[#000000]/80 transition-colors"
                           onClick={() => {
                             setForm((prev) => ({ ...prev, imageUrl: "" }))
                             setImagePreview("")
@@ -334,7 +334,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                         </button>
                       </>
                     ) : (
-                      <div className="size-full flex flex-col items-center justify-center text-muted-foreground">
+                      <div className="size-full flex flex-col items-center justify-center text-[#000000]/30">
                         <FontAwesomeIcon icon={faImage} className="text-xl mb-1" />
                         <span className="text-[10px]">No image</span>
                       </div>
@@ -361,7 +361,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                       />
                       {uploading ? "Uploading..." : "Upload Image"}
                     </Button>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-[#000000]/50">
                       Or enter an image URL below
                     </p>
                     <Input
@@ -404,7 +404,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                 <div className="space-y-2">
                   <Label htmlFor="price">Price (USD) *</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#000000]/50 text-sm">$</span>
                     <Input
                       id="price"
                       type="number"
@@ -448,7 +448,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                   value={form.viewUrl}
                   onChange={(e) => setForm((prev) => ({ ...prev, viewUrl: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#000000]/50">
                   This URL will open when users click &quot;View Now&quot; on your product card
                 </p>
               </div>
@@ -457,7 +457,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
               <div className="flex items-center justify-between rounded-lg border p-3">
                 <div>
                   <Label className="text-sm font-medium">Featured Product</Label>
-                  <p className="text-xs text-muted-foreground">Featured products appear with a badge</p>
+                  <p className="text-xs text-[#000000]/50">Featured products appear with a badge</p>
                 </div>
                 <Switch
                   checked={form.featured}
@@ -468,7 +468,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
               {/* Submit */}
               <div className="flex gap-3 pt-2">
                 <Button
-                  className="flex-1 gap-2"
+                  className="flex-1 gap-2 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
                   onClick={handleSubmit}
                   disabled={saving || !form.title || !form.description || !form.price}
                 >

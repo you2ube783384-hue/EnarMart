@@ -43,14 +43,14 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Top bar */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="bg-[#000000] text-[#ffffff]">
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs">
           <span>Discover 100,000+ premium digital products</span>
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 gap-1.5 text-xs text-primary-foreground hover:bg-primary-foreground/10"
+              className="h-7 gap-1.5 text-xs text-[#ffffff] hover:bg-[#ffffff]/10"
               onClick={onAdminClick}
             >
               <FontAwesomeIcon icon={faShieldHalved} className="text-[0.65rem]" />
@@ -64,8 +64,8 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
       <div className="container mx-auto flex h-16 items-center gap-4 px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl shrink-0" style={{ fontFamily: "var(--font-poppins)" }}>
-          <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">D</span>
+          <div className="size-8 rounded-lg bg-[#000000] flex items-center justify-center">
+            <span className="text-[#ffffff] font-bold text-sm">D</span>
           </div>
           <span className="hidden sm:inline">DigiMarket</span>
         </Link>
@@ -73,11 +73,11 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
         {/* Search bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-4">
           <div className="relative">
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" />
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#000000]/50 text-sm" />
             <Input
               type="search"
               placeholder="Search products..."
-              className="pl-9 h-10 bg-muted/50"
+              className="pl-9 h-10 bg-[#dff8f6]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -112,7 +112,7 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t bg-background p-4">
+        <div className="lg:hidden border-t bg-[#ffffff] p-4">
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <Button
@@ -132,54 +132,54 @@ export function Header({ onAdminClick, onSearch, onCategorySelect, activeCategor
       )}
 
       {/* Category bar */}
-      <div className="hidden lg:block border-t bg-muted/30">
+      <div className="hidden lg:block border-t bg-[#dff8f6]">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-6 overflow-x-auto py-2 text-sm text-muted-foreground">
-            <span className="shrink-0 font-medium text-foreground">Popular:</span>
+          <div className="flex items-center gap-6 overflow-x-auto py-2 text-sm text-[#000000]/60">
+            <span className="shrink-0 font-medium text-[#000000]">Popular:</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect(null)}
             >
               All Products
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("Photos")}
             >
               Stock Photos
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("Graphics")}
             >
               Vector Graphics
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("Templates")}
             >
               Design Templates
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("Fonts")}
             >
               Premium Fonts
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("3D")}
             >
               3D Assets
             </button>
             <span className="shrink-0">•</span>
             <button
-              className="shrink-0 hover:text-foreground transition-colors cursor-pointer"
+              className="shrink-0 hover:text-[#000000] transition-colors cursor-pointer"
               onClick={() => onCategorySelect("Icons")}
             >
               Icon Packs
