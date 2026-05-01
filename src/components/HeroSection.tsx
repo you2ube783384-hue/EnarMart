@@ -96,8 +96,6 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
 
       {/* Category Cards - Glassmorphism */}
       <div className="relative -mt-7 z-10 pb-12">
-        {/* Colorful background for glass effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00a67d]/20 via-[#f8f5f2] to-[#e67e22]/15 -z-10" />
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             {categoryCards.map((cat) => (
