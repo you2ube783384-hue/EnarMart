@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faCamera,
@@ -82,10 +83,14 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-2">
-            <Link href="/" className="inline-block mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
-              <span className="text-xl font-bold tracking-tight">
-                Digi<span className="text-[#00a67d]">Market</span>
-              </span>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/logo.png"
+                alt="DigiMarket"
+                width={160}
+                height={40}
+                className="h-9 w-auto"
+              />
             </Link>
             <p className="text-sm text-white/40 max-w-sm mb-5 leading-relaxed">
               The marketplace for premium digital products. Discover handcrafted assets from talented creators worldwide.

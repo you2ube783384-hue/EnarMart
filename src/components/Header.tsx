@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass, faBars, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { Input } from "@/components/ui/input"
@@ -44,10 +45,15 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
       <div className="border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto flex h-14 items-center gap-6 px-4 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0" style={{ fontFamily: "var(--font-poppins)" }}>
-            <span className="text-xl font-bold tracking-tight text-[#333333]">
-              Digi<span className="text-[#00a67d]">Market</span>
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <Image
+              src="/logo.png"
+              alt="DigiMarket"
+              width={140}
+              height={36}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Search bar */}

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useCallback, useEffect } from "react"
+import Image from "next/image"
 import { Header } from "@/components/Header"
 import { HeroSection } from "@/components/HeroSection"
 import { ProductGrid } from "@/components/ProductGrid"
@@ -16,12 +17,13 @@ function LoadingSpinner() {
           {/* Spinning arc */}
           <div className="absolute inset-0 size-12 rounded-full border-[3px] border-transparent border-t-[#00a67d] animate-spin" />
         </div>
-        <span
-          className="text-sm font-medium text-[#999999] tracking-wide"
-          style={{ fontFamily: "var(--font-poppins)" }}
-        >
-          Digi<span className="text-[#00a67d]">Market</span>
-        </span>
+        <Image
+          src="/logo.png"
+          alt="DigiMarket"
+          width={120}
+          height={30}
+          className="h-6 w-auto opacity-60"
+        />
       </div>
     </div>
   )

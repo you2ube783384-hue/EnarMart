@@ -104,11 +104,14 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
       <div className="w-full max-w-md">
         <div className="bg-[#ffffff] rounded-2xl shadow-lg border p-8">
           {/* Logo */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="size-10 rounded-lg bg-[#00a67d] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">D</span>
-            </div>
-            <span className="font-bold text-xl" style={{ fontFamily: "var(--font-poppins)" }}>DigiMarket</span>
+          <div className="flex items-center justify-center mb-8">
+            <Image
+              src="/logo.png"
+              alt="DigiMarket"
+              width={180}
+              height={45}
+              className="h-10 w-auto"
+            />
           </div>
 
           {/* Lock icon */}
@@ -728,10 +731,13 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="size-7 rounded-lg bg-[#00a67d] flex items-center justify-center">
-                <span className="text-white font-bold text-xs">D</span>
-              </div>
-              <span className="font-bold text-sm" style={{ fontFamily: "var(--font-poppins)" }}>DigiMarket</span>
+              <Image
+                src="/logo.png"
+                alt="DigiMarket"
+                width={110}
+                height={28}
+                className="h-6 w-auto"
+              />
             </Link>
             <span className="text-[#ffffff]/30 mx-1">/</span>
             <span className="text-sm text-[#ffffff]/60 flex items-center gap-1.5">
