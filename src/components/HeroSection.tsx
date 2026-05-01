@@ -1,18 +1,25 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
+import {
+  faArrowRight,
+  faCamera,
+  faPalette,
+  faTableColumns,
+  faFont,
+  faCube,
+  faShapes,
+} from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 
 const categoryCards = [
-  { name: "Photos", iconSrc: "/cat-photos.png" },
-  { name: "Graphics", iconSrc: "/cat-graphics.png" },
-  { name: "Templates", iconSrc: "/cat-templates.png" },
-  { name: "Fonts", iconSrc: "/cat-fonts.png" },
-  { name: "3D", iconSrc: "/cat-3d.png" },
-  { name: "Icons", iconSrc: "/cat-icons.png" },
+  { name: "Photos", icon: faCamera },
+  { name: "Graphics", icon: faPalette },
+  { name: "Templates", icon: faTableColumns },
+  { name: "Fonts", icon: faFont },
+  { name: "3D", icon: faCube },
+  { name: "Icons", icon: faShapes },
 ]
 
 interface CategoryCount {
@@ -104,14 +111,8 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
               className="group bg-white border-[3px] border-[#e0e0e0] rounded-xl p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-[#00a67d]/40 cursor-pointer"
             >
               {/* Icon */}
-              <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
-                <Image
-                  src={cat.iconSrc}
-                  alt={`${cat.name} icon`}
-                  width={56}
-                  height={56}
-                  className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm"
-                />
+              <div className="mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
+                <FontAwesomeIcon icon={cat.icon} className="text-[144px] text-[#333333]" />
               </div>
               <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
                 {cat.name}
