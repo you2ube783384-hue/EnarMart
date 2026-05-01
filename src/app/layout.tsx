@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   keywords: ["digital products", "fonts", "graphics", "templates", "3D assets", "icons", "creative market", "stock photos"],
   authors: [{ name: "DigiMarket" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/favicon.png",
   },
   openGraph: {
     title: "DigiMarket - Premium Digital Products Marketplace",
