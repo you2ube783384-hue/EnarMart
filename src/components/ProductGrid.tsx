@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowRight,
   faEye,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -52,12 +52,6 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
     fetchProducts()
   }, [fetchProducts])
 
-  const handleViewNow = (product: Product) => {
-    if (product.viewUrl) {
-      window.open(product.viewUrl, "_blank", "noopener,noreferrer")
-    }
-  }
-
   const handleCardClick = (product: Product) => {
     if (product.viewUrl) {
       window.open(product.viewUrl, "_blank", "noopener,noreferrer")
@@ -66,18 +60,15 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
 
   if (loading) {
     return (
-      <section className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <section className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 md:py-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="rounded-xl overflow-hidden border border-[#e5e5e5]">
-              <Skeleton className="aspect-square w-full rounded-none" />
-              <div className="p-3 sm:p-5 space-y-2 sm:space-y-3">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-full" />
-                <div className="flex justify-between">
-                  <Skeleton className="h-5 w-16" />
-                  <Skeleton className="h-8 w-20" />
-                </div>
+            <div key={i} className="rounded-xl overflow-hidden">
+              <Skeleton className="aspect-[4/5] w-full rounded-xl" />
+              <div className="pt-2.5 space-y-1.5">
+                <Skeleton className="h-3.5 w-4/5" />
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-4 w-2/5 rounded-full" />
               </div>
             </div>
           ))}
@@ -109,9 +100,9 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 lg:px-8 py-8 md:py-12">
+    <section className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 md:py-12">
       {/* Section header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
         <div>
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
             {category ? category : "Featured Products"}
@@ -142,84 +133,54 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
       </div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {products.map((product) => (
           <div
             key={product.id}
-            className="group rounded-xl bg-white border border-[#e5e5e5] overflow-hidden transition-all hover:shadow-lg hover:border-transparent cursor-pointer"
+            className="group cursor-pointer"
             onClick={() => handleCardClick(product)}
           >
             {/* Image */}
-            <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
+            <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f5f5] rounded-lg sm:rounded-xl">
               <Image
                 src={product.imageUrl}
                 alt={product.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+              {/* Subtle overlay on hover */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg sm:rounded-xl" />
               {/* Featured badge */}
               {product.featured && (
-                <Badge className="absolute top-3 left-3 bg-[#fff8e1] text-[#e67e22] border-0 text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
-                  Featured
-                </Badge>
-              )}
-              {/* View Now overlay button */}
-              {product.viewUrl && (
-                <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
-                  <Button
-                    size="sm"
-                    className="bg-[#00a67d] text-white hover:bg-[#008f6b] shadow-lg gap-1.5 rounded-full px-5 text-xs font-semibold"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleViewNow(product)
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faArrowRight} className="text-[0.6rem]" />
-                    View Now
-                  </Button>
-                </div>
+                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#e67e22] text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
+                  ★ Featured
+                </span>
               )}
             </div>
 
-            {/* Info */}
-            <div className="p-3 sm:p-5">
-              <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
-                <Badge
-                  variant="outline"
-                  className="text-[10px] sm:text-[11px] font-medium border-[#e5e5e5] text-[#999999] rounded-full px-2 py-0"
-                >
-                  {product.category}
-                </Badge>
-              </div>
+            {/* Card info - clean Etsy style */}
+            <div className="pt-2 sm:pt-2.5 px-0.5">
+              {/* Title */}
               <h3
-                className="font-semibold text-sm sm:text-base line-clamp-1 text-[#333333] group-hover:text-[#00a67d] transition-colors"
-                style={{ fontFamily: "var(--font-poppins)" }}
+                className="font-medium text-[13px] sm:text-sm text-[#333333] line-clamp-2 leading-snug group-hover:text-[#00a67d] transition-colors"
               >
                 {product.title}
               </h3>
-              <p className="text-[11px] sm:text-xs text-[#999999] line-clamp-2 mt-1 mb-3 leading-relaxed">
-                {product.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-sm sm:text-lg font-bold text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
-                  ${product.price}
-                </span>
-                <Button
-                  size="sm"
-                  className="gap-1.5 text-[11px] sm:text-xs bg-[#00a67d] text-white hover:bg-[#008f6b] rounded-full px-3 sm:px-4 font-semibold h-8 sm:h-9"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleViewNow(product)
-                  }}
-                  disabled={!product.viewUrl}
-                >
-                  {product.viewUrl ? "View Now" : "Soon"}
-                  {product.viewUrl && <FontAwesomeIcon icon={faArrowRight} className="text-[0.55rem] sm:text-[0.6rem]" />}
-                </Button>
-              </div>
+
+              {/* Price - bold and prominent */}
+              <span
+                className="block text-[15px] sm:text-lg font-bold text-[#222222] mt-1"
+                style={{ fontFamily: "var(--font-poppins)" }}
+              >
+                ${product.price}
+              </span>
+
+              {/* Digital download badge */}
+              <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] sm:text-[11px] font-medium text-white bg-[#00a67d] px-2 py-0.5 rounded-full">
+                <FontAwesomeIcon icon={faDownload} className="text-[0.5rem]" />
+                Digital Download
+              </span>
             </div>
           </div>
         ))}
