@@ -1,25 +1,18 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowRight,
-  faCamera,
-  faPalette,
-  faTableColumns,
-  faFont,
-  faCube,
-  faShapes,
-} from "@fortawesome/free-solid-svg-icons"
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "@/components/ui/button"
 
 const categoryCards = [
-  { name: "Photos", icon: faCamera, color: "#00a67d", bg: "#e6f7f2" },
-  { name: "Graphics", icon: faPalette, color: "#e67e22", bg: "#fef3e8" },
-  { name: "Templates", icon: faTableColumns, color: "#8e44ad", bg: "#f5eef8" },
-  { name: "Fonts", icon: faFont, color: "#2c3e50", bg: "#eef0f2" },
-  { name: "3D", icon: faCube, color: "#e74c3c", bg: "#fdeeed" },
-  { name: "Icons", icon: faShapes, color: "#f39c12", bg: "#fef9ed" },
+  { name: "Photos", iconSrc: "/cat-photos.png" },
+  { name: "Graphics", iconSrc: "/cat-graphics.png" },
+  { name: "Templates", iconSrc: "/cat-templates.png" },
+  { name: "Fonts", iconSrc: "/cat-fonts.png" },
+  { name: "3D", iconSrc: "/cat-3d.png" },
+  { name: "Icons", iconSrc: "/cat-icons.png" },
 ]
 
 interface CategoryCount {
@@ -101,29 +94,37 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Category Cards */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 -mt-7 relative z-10 pb-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-          {categoryCards.map((cat) => (
-            <button
-              key={cat.name}
-              onClick={() => onCategoryClick(cat.name)}
-              className="group relative overflow-hidden rounded-xl bg-[#f0e3b4] border border-[#e5d9a8] p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-transparent cursor-pointer"
-            >
-              <div
-                className="size-14 md:size-16 rounded-xl flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-110"
-                style={{ backgroundColor: cat.bg }}
+      {/* Category Cards - Glassmorphism */}
+      <div className="relative -mt-7 z-10 pb-12">
+        {/* Colorful background for glass effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#00a67d]/20 via-[#f8f5f2] to-[#e67e22]/15 -z-10" />
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+            {categoryCards.map((cat) => (
+              <button
+                key={cat.name}
+                onClick={() => onCategoryClick(cat.name)}
+                className="glass-card group relative overflow-hidden rounded-[20px] p-5 md:p-6 text-center transition-all hover:shadow-lg cursor-pointer"
               >
-                <FontAwesomeIcon icon={cat.icon} className="text-xl md:text-2xl" style={{ color: cat.color }} />
-              </div>
-              <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
-                {cat.name}
-              </h3>
-              <p className="text-xs text-[#999999] mt-0.5">
-                {loading ? "..." : getCount(cat.name)}
-              </p>
-            </button>
-          ))}
+                {/* Icon */}
+                <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
+                  <Image
+                    src={cat.iconSrc}
+                    alt={`${cat.name} icon`}
+                    width={56}
+                    height={56}
+                    className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm"
+                  />
+                </div>
+                <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+                  {cat.name}
+                </h3>
+                <p className="text-xs text-[#999999] mt-0.5">
+                  {loading ? "..." : getCount(cat.name)}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </section>
