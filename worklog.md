@@ -165,3 +165,33 @@ Stage Summary:
 - Cookie-based session with 7-day expiry
 - Admin dashboard is a full page, not a dialog modal
 - Header simplified: no Admin button, just promo bar text centered
+
+---
+Task ID: 10
+Agent: Main Orchestrator
+Task: Add Image Library tab to admin panel for managing /public/uploads images
+
+Work Log:
+- Created GET /api/library - lists all images in public/uploads with filename, url, size, extension, modified date
+- Created DELETE /api/library?filename=X - deletes an image (with directory traversal protection)
+- Created PUT /api/library - replaces an image keeping the same filename (with file type validation)
+- Added ImageLibraryTab component with:
+  - Visual grid of all images with thumbnails, extension badges, filenames
+  - Search/filter by filename
+  - Click-to-select with detail panel (desktop) or bottom bar (mobile)
+  - Detail panel shows: preview, filename, size, type, modified date, URL
+  - Copy URL button (copies /uploads/filename.ext to clipboard)
+  - Replace Image button (opens file picker, overwrites the existing file in-place)
+  - Delete Image button (with confirmation dialog)
+  - Image count stats and search results count
+- Added "Library" tab with folder icon to admin dashboard tabs
+- All library operations use consistent 4-color palette (#dff8f6, #ffffff, #000000, #ffefb8)
+- Lint passes clean, API tested and returning correct data
+
+Stage Summary:
+- Image Library tab fully functional in /control admin panel
+- All images from /public/uploads visible as a visual grid
+- Delete: removes image file with confirmation
+- Replace: uploads new file keeping same filename (preserves product references)
+- Copy URL: copies public URL path to clipboard
+- Responsive design with mobile bottom action bar
