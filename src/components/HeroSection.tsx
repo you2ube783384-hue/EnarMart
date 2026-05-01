@@ -94,43 +94,33 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Category Cards - Glassmorphism */}
-      <div className="relative mt-4 z-10 pb-12 overflow-hidden">
-        {/* Colorful background for glass blur effect */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#00a67d] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" />
-          <div className="absolute top-10 right-1/4 w-72 h-72 bg-[#e67e22] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{ animationDelay: "2s" }} />
-          <div className="absolute -bottom-10 left-1/2 w-72 h-72 bg-[#8e44ad] rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse" style={{ animationDelay: "4s" }} />
-          <div className="absolute top-1/2 left-10 w-48 h-48 bg-[#e74c3c] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: "1s" }} />
-          <div className="absolute top-5 right-10 w-56 h-56 bg-[#f39c12] rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse" style={{ animationDelay: "3s" }} />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-            {categoryCards.map((cat) => (
-              <button
-                key={cat.name}
-                onClick={() => onCategoryClick(cat.name)}
-                className="glass-card group relative overflow-hidden rounded-[20px] p-5 md:p-6 text-center transition-all hover:shadow-lg cursor-pointer"
-              >
-                {/* Icon */}
-                <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
-                  <Image
-                    src={cat.iconSrc}
-                    alt={`${cat.name} icon`}
-                    width={56}
-                    height={56}
-                    className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm"
-                  />
-                </div>
-                <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
-                  {cat.name}
-                </h3>
-                <p className="text-xs text-[#999999] mt-0.5">
-                  {loading ? "..." : getCount(cat.name)}
-                </p>
-              </button>
-            ))}
-          </div>
+      {/* Category Cards */}
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 mt-4 pb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+          {categoryCards.map((cat) => (
+            <button
+              key={cat.name}
+              onClick={() => onCategoryClick(cat.name)}
+              className="group bg-white border-[3px] border-[#e0e0e0] rounded-xl p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-[#00a67d]/40 cursor-pointer"
+            >
+              {/* Icon */}
+              <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 transition-transform group-hover:scale-110 flex items-center justify-center">
+                <Image
+                  src={cat.iconSrc}
+                  alt={`${cat.name} icon`}
+                  width={56}
+                  height={56}
+                  className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm"
+                />
+              </div>
+              <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+                {cat.name}
+              </h3>
+              <p className="text-xs text-[#999999] mt-0.5">
+                {loading ? "..." : getCount(cat.name)}
+              </p>
+            </button>
+          ))}
         </div>
       </div>
     </section>
