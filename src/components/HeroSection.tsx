@@ -108,13 +108,13 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
             <button
               key={cat.name}
               onClick={() => onCategoryClick(cat.name)}
-              className="group relative overflow-hidden rounded-xl bg-white border border-[#e5e5e5] p-4 md:p-5 text-left transition-all hover:shadow-md hover:border-transparent cursor-pointer"
+              className="group relative overflow-hidden rounded-xl bg-[#f0e3b4] border border-[#e5d9a8] p-5 md:p-6 text-center transition-all hover:shadow-md hover:border-transparent cursor-pointer"
             >
               <div
-                className="size-10 md:size-11 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-110"
+                className="size-14 md:size-16 rounded-xl flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-110"
                 style={{ backgroundColor: cat.bg }}
               >
-                <FontAwesomeIcon icon={cat.icon} className="text-base md:text-lg" style={{ color: cat.color }} />
+                <FontAwesomeIcon icon={cat.icon} className="text-xl md:text-2xl" style={{ color: cat.color }} />
               </div>
               <h3 className="font-semibold text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
                 {cat.name}
