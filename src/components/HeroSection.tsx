@@ -95,7 +95,7 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
       </div>
 
       {/* Category Cards - Glassmorphism */}
-      <div className="relative -mt-7 z-10 pb-12">
+      <div className="relative mt-4 z-10 pb-12">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             {categoryCards.map((cat) => (
