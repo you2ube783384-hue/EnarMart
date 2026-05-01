@@ -25,6 +25,8 @@ interface HeaderProps {
 export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchExpanded, setSearchExpanded] = useState(false)
+  const searchInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,8 +46,13 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
       {/* Main nav bar */}
       <div className="border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto flex h-14 items-center gap-6 px-4 lg:px-8">
-          {/* Logo */}
-          <Link href="/" className="flex items-center shrink-0">
+          {/* Logo - hidden when search expanded */}
+          <Link
+            href="/"
+            className={`flex items-center shrink-0 transition-all duration-300 ${
+              searchExpanded ? "opacity-0 w-0 overflow-hidden pointer-events-none" : "opacity-100 w-auto"
+            }`}
+          >
             <Image
               src="/logo.png"
               alt="DigiMarket"
@@ -57,21 +64,52 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
           </Link>
 
           {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-lg">
-            <div className="relative">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#999999] text-sm" />
+          <form
+            onSubmit={handleSearch}
+            className={`flex items-center gap-2 transition-all duration-300 ${
+              searchExpanded ? "flex-1" : "flex-1 max-w-lg"
+            }`}
+          >
+            <div className="relative w-full">
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#999999] text-sm"
+              />
               <Input
+                ref={searchInputRef}
                 type="search"
                 placeholder="Search products..."
-                className="pl-9 h-9 bg-[#f5f5f5] border-[#e5e5e5] rounded-full text-sm placeholder:text-[#999999] focus:bg-white focus:border-[#00a67d] focus:ring-[#00a67d]/20"
+                className={`pl-10 h-10 bg-[#f5f5f5] border-[#e5e5e5] rounded-full text-sm placeholder:text-[#999999] focus:bg-white focus:border-[#00a67d] focus:ring-[#00a67d]/20 transition-all duration-300 ${
+                  searchExpanded ? "w-full pr-10 text-base" : ""
+                }`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setSearchExpanded(true)}
               />
+              {/* Cross button - visible when search expanded */}
+              {searchExpanded && (
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-[#e5e5e5] hover:bg-[#d5d5d5] text-[#666666] hover:text-[#333333] transition-all duration-200 cursor-pointer"
+                  onClick={() => {
+                    setSearchExpanded(false)
+                    setSearchQuery("")
+                    onSearch("")
+                    searchInputRef.current?.blur()
+                  }}
+                >
+                  <FontAwesomeIcon icon={faXmark} className="text-xs" />
+                </button>
+              )}
             </div>
           </form>
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Desktop nav - hidden when search expanded */}
+          <nav
+            className={`hidden lg:flex items-center gap-1 transition-all duration-300 ${
+              searchExpanded ? "opacity-0 w-0 overflow-hidden pointer-events-none" : "opacity-100 w-auto"
+            }`}
+          >
             {categories.map((category) => (
               <button
                 key={category}
@@ -87,9 +125,11 @@ export function Header({ onSearch, onCategorySelect, activeCategory }: HeaderPro
             ))}
           </nav>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile menu toggle - hidden when search expanded */}
           <button
-            className="lg:hidden p-2 text-[#666666] hover:text-[#333333] transition-colors"
+            className={`lg:hidden p-2 text-[#666666] hover:text-[#333333] transition-colors ${
+              searchExpanded ? "opacity-0 w-0 overflow-hidden pointer-events-none" : "opacity-100 w-auto"
+            }`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <FontAwesomeIcon icon={mobileMenuOpen ? faXmark : faBars} className="text-lg" />
