@@ -1124,9 +1124,12 @@ export default function ControlPage() {
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#e6f7f2]">
-        <div className="flex items-center gap-2 text-[#000000]/50">
-          <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-          <span className="text-sm">Checking session...</span>
+        <div className="flex flex-col items-center gap-3">
+          <div className="relative">
+            <div className="size-10 rounded-full border-[3px] border-[#e5e5e5]" />
+            <div className="absolute inset-0 size-10 rounded-full border-[3px] border-transparent border-t-[#00a67d] animate-spin" />
+          </div>
+          <span className="text-sm text-[#999999]">Checking session...</span>
         </div>
       </div>
     )

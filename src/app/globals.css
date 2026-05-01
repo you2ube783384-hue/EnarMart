@@ -145,6 +145,15 @@
 .fa-icon-xl { font-size: 1.25rem; }
 .fa-icon-2xl { font-size: 1.5rem; }
 
+/* Prevent Font Awesome SVG icons from flashing unstyled */
+svg[data-prefix] {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  overflow: visible;
+  fill: currentColor;
+}
+
 /* Smooth scrollbar styling */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;

@@ -1,15 +1,55 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { Header } from "@/components/Header"
 import { HeroSection } from "@/components/HeroSection"
 import { ProductGrid } from "@/components/ProductGrid"
 import { Footer } from "@/components/Footer"
 
+function LoadingSpinner() {
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-transparent">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative">
+          {/* Outer ring */}
+          <div className="size-12 rounded-full border-[3px] border-[#e5e5e5]" />
+          {/* Spinning arc */}
+          <div className="absolute inset-0 size-12 rounded-full border-[3px] border-transparent border-t-[#00a67d] animate-spin" />
+        </div>
+        <span
+          className="text-sm font-medium text-[#999999] tracking-wide"
+          style={{ fontFamily: "var(--font-poppins)" }}
+        >
+          Digi<span className="text-[#00a67d]">Market</span>
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [productRefreshKey, setProductRefreshKey] = useState(0)
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    // Wait for fonts and icons to be fully loaded
+    const checkReady = () => {
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          // Small extra delay to ensure CSS is painted
+          requestAnimationFrame(() => {
+            setIsReady(true)
+          })
+        })
+      } else {
+        // Fallback: just wait a short time
+        setTimeout(() => setIsReady(true), 300)
+      }
+    }
+    checkReady()
+  }, [])
 
   const handleCategorySelect = useCallback((category: string | null) => {
     setActiveCategory(category)
@@ -24,7 +64,6 @@ export default function Home() {
   const handleCategoryClick = useCallback((category: string) => {
     setActiveCategory(category)
     setSearchQuery("")
-    // Scroll to products section
     const el = document.getElementById("products-section")
     if (el) {
       el.scrollIntoView({ behavior: "smooth" })
@@ -32,29 +71,37 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header
-        onSearch={handleSearch}
-        onCategorySelect={handleCategorySelect}
-        activeCategory={activeCategory}
-      />
+    <>
+      {/* Show spinner while loading, hide content to prevent icon flash */}
+      {!isReady && <LoadingSpinner />}
 
-      <main className="flex-1">
-        {/* Show hero only when no category or search filter is active */}
-        {!activeCategory && !searchQuery && (
-          <HeroSection key={productRefreshKey} onCategoryClick={handleCategoryClick} />
-        )}
+      <div
+        className={`min-h-screen flex flex-col bg-white transition-opacity duration-300 ${
+          isReady ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <Header
+          onSearch={handleSearch}
+          onCategorySelect={handleCategorySelect}
+          activeCategory={activeCategory}
+        />
 
-        <div id="products-section">
-          <ProductGrid
-            key={productRefreshKey}
-            category={activeCategory}
-            searchQuery={searchQuery}
-          />
-        </div>
-      </main>
+        <main className="flex-1">
+          {!activeCategory && !searchQuery && (
+            <HeroSection key={productRefreshKey} onCategoryClick={handleCategoryClick} />
+          )}
 
-      <Footer />
-    </div>
+          <div id="products-section">
+            <ProductGrid
+              key={productRefreshKey}
+              category={activeCategory}
+              searchQuery={searchQuery}
+            />
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </>
   )
 }
