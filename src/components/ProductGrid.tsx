@@ -67,16 +67,16 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
   if (loading) {
     return (
       <section className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="rounded-xl overflow-hidden border border-[#e5e5e5]">
               <Skeleton className="aspect-[4/3] w-full rounded-none" />
-              <div className="p-4 space-y-3">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-full" />
+              <div className="p-2.5 sm:p-4 space-y-2 sm:space-y-3">
+                <Skeleton className="h-3 sm:h-4 w-3/4" />
+                <div className="hidden sm:block"><Skeleton className="h-3 w-full" /></div>
                 <div className="flex justify-between">
-                  <Skeleton className="h-5 w-16" />
-                  <Skeleton className="h-8 w-20" />
+                  <Skeleton className="h-4 sm:h-5 w-12 sm:w-16" />
+                  <Skeleton className="h-6 sm:h-8 w-16 sm:w-20" />
                 </div>
               </div>
             </div>
@@ -142,7 +142,7 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
       </div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
         {products.map((product) => (
           <div
             key={product.id}
@@ -185,8 +185,8 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
             </div>
 
             {/* Info */}
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="p-2.5 sm:p-4">
+              <div className="hidden sm:flex items-center gap-2 mb-2">
                 <Badge
                   variant="outline"
                   className="text-[10px] font-medium border-[#e5e5e5] text-[#999999] rounded-full px-2 py-0"
@@ -195,29 +195,29 @@ export function ProductGrid({ category, searchQuery }: ProductGridProps) {
                 </Badge>
               </div>
               <h3
-                className="font-semibold text-sm line-clamp-1 text-[#333333] group-hover:text-[#00a67d] transition-colors"
+                className="font-semibold text-xs sm:text-sm line-clamp-1 text-[#333333] group-hover:text-[#00a67d] transition-colors"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 {product.title}
               </h3>
-              <p className="text-xs text-[#999999] line-clamp-2 mt-1 mb-3 leading-relaxed">
+              <p className="hidden sm:block text-xs text-[#999999] line-clamp-2 mt-1 mb-3 leading-relaxed">
                 {product.description}
               </p>
-              <div className="flex items-center justify-between">
-                <span className="text-base font-bold text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+              <div className="flex items-center justify-between mt-2 sm:mt-0">
+                <span className="text-sm sm:text-base font-bold text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
                   ${product.price}
                 </span>
                 <Button
                   size="sm"
-                  className="gap-1.5 text-xs bg-[#00a67d] text-white hover:bg-[#008f6b] rounded-full px-4 font-semibold h-8"
+                  className="gap-1 text-[10px] sm:text-xs bg-[#00a67d] text-white hover:bg-[#008f6b] rounded-full px-2.5 sm:px-4 font-semibold h-7 sm:h-8"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleViewNow(product)
                   }}
                   disabled={!product.viewUrl}
                 >
-                  {product.viewUrl ? "View Now" : "Coming Soon"}
-                  {product.viewUrl && <FontAwesomeIcon icon={faArrowRight} className="text-[0.55rem]" />}
+                  {product.viewUrl ? "View Now" : "Soon"}
+                  {product.viewUrl && <FontAwesomeIcon icon={faArrowRight} className="text-[0.5rem] sm:text-[0.55rem]" />}
                 </Button>
               </div>
             </div>
