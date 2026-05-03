@@ -1,28 +1,31 @@
 ---
-Task ID: 1
-Agent: main
-Task: Add show/hide category visibility controls for navbar and hero section with horizontal scroll
+Task ID: 1-7
+Agent: Main Agent
+Task: Complete overhaul of EnarMart website to Canva template store
 
 Work Log:
-- Updated Prisma schema: Added `showInNav` (Boolean, default true) and `showInHero` (Boolean, default true) fields to Category model
-- Ran `bun run db:push` to sync schema with database
-- Updated GET /api/categories to return showInNav and showInHero fields
-- Updated POST /api/categories to accept showInNav and showInHero when creating categories
-- Updated PUT /api/categories/[id] to handle showInNav and showInHero updates
-- Updated seed route to include showInNav and showInHero in default categories
-- Created shared /src/lib/icon-helpers.ts module with getIconDefinition, FA_ICON_MAP, and FA_ICON_OPTIONS exports
-- Updated admin panel (control/page.tsx): Added showInNav and showInHero to CategoryItem interface, form state, and reset/submit handlers
-- Added inline toggle badges (Nav/Hero) to each category row in the admin panel with quick-toggle functionality via handleCatToggle
-- Added Switch toggles for "Show in Navbar" and "Show in Hero Section" in the Add/Edit Category form
-- Rewrote Header.tsx: Now fetches categories from /api/categories, filters by showInNav, dynamically renders both top nav and sub-nav bar
-- Added horizontal scroll with left/right arrow buttons to sub-nav bar when categories overflow
-- Rewrote HeroSection.tsx: Now fetches categories from /api/categories, filters by showInHero, dynamically renders category cards
-- Added horizontal scroll with left/right circular arrow buttons and fade edges when categories overflow
-- Added scrollbar-none CSS class to globals.css for hiding scrollbars on horizontal scroll containers
-- All changes pass ESLint lint check
-- Tested API endpoints: GET returns showInNav/showInHero, PUT successfully updates them
+- Updated .env with real Vercel Blob token
+- Reseeded Turso database with Canva template data (10 categories, 28 subcategories, 30 products)
+- Rewrote Header.tsx: logo links to /, search closes on overlay click, no redirect on close, nav links to /shop
+- Rewrote HeroSection.tsx: Canva-themed hero, category cards link to /shop with category filter
+- Created FeaturedProducts.tsx: only shows featured products on homepage, Explore CTA -> /shop
+- Created /shop page with filters (category, search, price range), sorting (6 options), 24 per page + Load More
+- Updated Footer.tsx: Canva-specific links, legal pages linked
+- Updated layout.tsx: metadata for EnarMart Canva Templates Store
+- Created 8 legal/company pages: Privacy, Terms, Refund, License, About, Contact, Help, FAQ
+- Fixed Vercel Blob upload route with real token support
+- Fixed db.ts to use PrismaLibSql adapter for Turso (was reverted by dev.sh)
+- Updated dev.sh to use db:generate instead of db:push
+- Added icon helpers for Canva categories: faFire, faVideo, faBriefcase, faGraduationCap, etc.
+- Admin panel: mobile optimization + image library selector from Vercel Blob
+- Product cards open viewUrl in new tab
+- All pages work and lint passes clean
 
 Stage Summary:
-- Categories can now be toggled visible/hidden in the navbar (showInNav) and hero section (showInHero) from the admin panel
-- Both the navbar sub-nav and hero section category cards support horizontal scrolling with arrow buttons when overflow occurs
-- Shared icon helper module prevents code duplication between admin panel, Header, and HeroSection
+- Website fully transformed to Canva template store
+- Homepage shows only featured products with Explore Templates CTA
+- /shop page with full filtering, sorting, and pagination
+- Search bar properly closes on overlay click and close button
+- All legal pages with dummy content
+- Admin panel optimized for mobile with image library selector
+- 3 commits pushed to local repo (need GitHub auth to push remote)
