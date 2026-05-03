@@ -54,13 +54,11 @@ interface AdminPanelProps {
   onProductChange: () => void
 }
 
-const categories = ["Photos", "Graphics", "Templates", "Fonts", "3D", "Icons"]
-
 const emptyForm = {
   title: "",
   description: "",
   price: "",
-  category: "Graphics",
+  category: "",
   imageUrl: "",
   viewUrl: "",
   featured: false,
@@ -68,6 +66,7 @@ const emptyForm = {
 
 export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelProps) {
   const [products, setProducts] = useState<Product[]>([])
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -90,11 +89,25 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
     }
   }, [])
 
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await fetch("/api/categories")
+      if (!res.ok) return
+      const data = await res.json()
+      if (Array.isArray(data)) {
+        setDynamicCategories(data.map((cat: { name: string }) => cat.name))
+      }
+    } catch {
+      // Silently ignore
+    }
+  }, [])
+
   useEffect(() => {
     if (open) {
       fetchProducts()
+      fetchCategories()
     }
-  }, [open, fetchProducts])
+  }, [open, fetchProducts, fetchCategories])
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -426,7 +439,7 @@ export function AdminPanel({ open, onOpenChange, onProductChange }: AdminPanelPr
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categories.map((cat) => (
+                      {dynamicCategories.map((cat) => (
                         <SelectItem key={cat} value={cat}>
                           {cat}
                         </SelectItem>

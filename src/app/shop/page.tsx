@@ -13,7 +13,6 @@ import {
   faSortAmountDown,
   faFilter,
   faChevronDown,
-  faChevronUp,
   faArrowRight,
 } from "@fortawesome/free-solid-svg-icons"
 import { Header } from "@/components/Header"
@@ -36,6 +35,12 @@ interface Product {
   createdAt: string
 }
 
+interface Subcategory {
+  id: string
+  name: string
+  categoryId: string
+}
+
 interface Category {
   id: string
   name: string
@@ -43,6 +48,7 @@ interface Category {
   showInNav: boolean
   showInHero: boolean
   subcategoriesCount: number
+  subcategories: Subcategory[]
 }
 
 const PRODUCTS_PER_PAGE = 24
@@ -60,6 +66,7 @@ function ShopContent() {
   const searchParams = useSearchParams()
   const initialCategory = searchParams.get("category") || ""
   const initialSearch = searchParams.get("search") || ""
+  const initialSubcategory = searchParams.get("subcategory") || ""
 
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -68,11 +75,16 @@ function ShopContent() {
 
   // Filters
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory)
   const [searchQuery, setSearchQuery] = useState(initialSearch)
   const [sortBy, setSortBy] = useState("newest")
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
   const [showFilters, setShowFilters] = useState(false)
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(initialCategory ? categories.find(c => c.name === initialCategory)?.id || null : null)
+
+  // Get subcategories for selected category
+  const currentCategorySubcategories = categories.find(c => c.name === selectedCategory)?.subcategories || []
 
   // Fetch categories
   useEffect(() => {
@@ -114,11 +126,20 @@ function ShopContent() {
   // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(PRODUCTS_PER_PAGE)
-  }, [selectedCategory, searchQuery, sortBy, minPrice, maxPrice])
+  }, [selectedCategory, selectedSubcategory, searchQuery, sortBy, minPrice, maxPrice])
 
   // Filter and sort products
   const filteredProducts = React.useMemo(() => {
     let result = [...products]
+
+    // Subcategory filter (search by subcategory name in title or description)
+    if (selectedSubcategory) {
+      result = result.filter((p) =>
+        p.title.toLowerCase().includes(selectedSubcategory.toLowerCase()) ||
+        p.description.toLowerCase().includes(selectedSubcategory.toLowerCase()) ||
+        p.category.toLowerCase().includes(selectedSubcategory.toLowerCase())
+      )
+    }
 
     // Price filter
     if (minPrice) {
@@ -151,7 +172,7 @@ function ShopContent() {
     }
 
     return result
-  }, [products, sortBy, minPrice, maxPrice])
+  }, [products, sortBy, minPrice, maxPrice, selectedSubcategory])
 
   const displayedProducts = filteredProducts.slice(0, displayCount)
   const hasMore = displayCount < filteredProducts.length
@@ -164,14 +185,30 @@ function ShopContent() {
 
   const clearFilters = () => {
     setSelectedCategory("")
+    setSelectedSubcategory("")
     setSearchQuery("")
     setSortBy("newest")
     setMinPrice("")
     setMaxPrice("")
+    setExpandedCategory(null)
+  }
+
+  const handleCategorySelect = (catName: string) => {
+    if (selectedCategory === catName) {
+      setSelectedCategory("")
+      setSelectedSubcategory("")
+      setExpandedCategory(null)
+    } else {
+      setSelectedCategory(catName)
+      setSelectedSubcategory("")
+      const cat = categories.find(c => c.name === catName)
+      setExpandedCategory(cat?.id || null)
+    }
   }
 
   const activeFilterCount = [
     selectedCategory,
+    selectedSubcategory,
     searchQuery,
     minPrice,
     maxPrice,
@@ -186,11 +223,13 @@ function ShopContent() {
         <div className="bg-[#f8f5f2] border-b border-[#e5e5e5]">
           <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8">
             <h1 className="text-2xl md:text-3xl font-bold text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
-              {selectedCategory || "All Templates"}
+              {selectedSubcategory || selectedCategory || "All Templates"}
             </h1>
             <p className="text-sm text-[#999999] mt-1">
               {searchQuery
                 ? `Search results for "${searchQuery}"`
+                : selectedSubcategory
+                ? `Browse ${selectedSubcategory} templates in ${selectedCategory}`
                 : selectedCategory
                 ? `Browse our ${selectedCategory.toLowerCase()} collection`
                 : "Browse all premium Canva templates"}
@@ -260,10 +299,10 @@ function ShopContent() {
               )}
             </div>
 
-            {/* Category + Price filters */}
+            {/* Category + Subcategory + Price filters */}
             <div className={`${showFilters ? "block" : "hidden"} lg:block`}>
-              <div className="flex flex-col lg:flex-row gap-4 lg:items-end">
-                {/* Categories */}
+              <div className="flex flex-col lg:flex-row gap-4 lg:items-start">
+                {/* Categories with subcategories */}
                 <div className="flex-1">
                   <p className="text-xs font-medium text-[#999999] uppercase tracking-wider mb-2">Category</p>
                   <div className="flex flex-wrap gap-2">
@@ -273,25 +312,61 @@ function ShopContent() {
                           ? "bg-[#00a67d] text-white border-[#00a67d]"
                           : "bg-white text-[#666666] border-[#e5e5e5] hover:border-[#00a67d]/40 hover:text-[#00a67d]"
                       }`}
-                      onClick={() => setSelectedCategory("")}
+                      onClick={() => { setSelectedCategory(""); setSelectedSubcategory(""); setExpandedCategory(null); }}
                     >
                       All
                     </button>
                     {categories.map((cat) => (
-                      <button
-                        key={cat.id}
-                        className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
-                          selectedCategory === cat.name
-                            ? "bg-[#00a67d] text-white border-[#00a67d]"
-                            : "bg-white text-[#666666] border-[#e5e5e5] hover:border-[#00a67d]/40 hover:text-[#00a67d]"
-                        }`}
-                        onClick={() => setSelectedCategory(selectedCategory === cat.name ? "" : cat.name)}
-                      >
-                        <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[0.6rem]" />
-                        {cat.name}
-                      </button>
+                      <div key={cat.id} className="flex flex-wrap items-center gap-1.5">
+                        <button
+                          className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                            selectedCategory === cat.name
+                              ? "bg-[#00a67d] text-white border-[#00a67d]"
+                              : "bg-white text-[#666666] border-[#e5e5e5] hover:border-[#00a67d]/40 hover:text-[#00a67d]"
+                          }`}
+                          onClick={() => handleCategorySelect(cat.name)}
+                        >
+                          <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[0.6rem]" />
+                          {cat.name}
+                        </button>
+                      </div>
                     ))}
                   </div>
+
+                  {/* Subcategories for selected category */}
+                  {selectedCategory && currentCategorySubcategories.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs font-medium text-[#999999] uppercase tracking-wider mb-2">
+                        <FontAwesomeIcon icon={faChevronDown} className="mr-1 text-[0.5rem]" />
+                        Subcategories
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <button
+                          className={`px-2.5 py-1 text-[11px] font-medium rounded-full border transition-colors cursor-pointer ${
+                            !selectedSubcategory
+                              ? "bg-[#00a67d]/10 text-[#00a67d] border-[#00a67d]/30"
+                              : "bg-white text-[#999999] border-[#e5e5e5] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                          }`}
+                          onClick={() => setSelectedSubcategory("")}
+                        >
+                          All {selectedCategory}
+                        </button>
+                        {currentCategorySubcategories.map((sub) => (
+                          <button
+                            key={sub.id}
+                            className={`px-2.5 py-1 text-[11px] font-medium rounded-full border transition-colors cursor-pointer ${
+                              selectedSubcategory === sub.name
+                                ? "bg-[#00a67d]/10 text-[#00a67d] border-[#00a67d]/30"
+                                : "bg-white text-[#999999] border-[#e5e5e5] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                            }`}
+                            onClick={() => setSelectedSubcategory(selectedSubcategory === sub.name ? "" : sub.name)}
+                          >
+                            {sub.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Price range */}
@@ -328,6 +403,11 @@ function ShopContent() {
             <Badge className="text-xs bg-[#e6f7f2] text-[#00a67d] border-0 font-medium px-3 py-1 rounded-full">
               {filteredProducts.length} template{filteredProducts.length !== 1 ? "s" : ""}
             </Badge>
+            {selectedSubcategory && (
+              <Badge className="text-xs bg-[#fff8e1] text-[#e67e22] border-0 font-medium px-3 py-1 rounded-full">
+                {selectedSubcategory}
+              </Badge>
+            )}
           </div>
 
           {/* Product grid */}

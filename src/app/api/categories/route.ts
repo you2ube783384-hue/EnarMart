@@ -1,11 +1,16 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/categories - List all categories with subcategories count
+// GET /api/categories - List all categories with subcategories
 export async function GET() {
   try {
     const categories = await db.category.findMany({
       include: {
+        subcategories: {
+          orderBy: {
+            name: 'asc',
+          },
+        },
         _count: {
           select: { subcategories: true },
         },
@@ -22,6 +27,11 @@ export async function GET() {
       showInNav: cat.showInNav,
       showInHero: cat.showInHero,
       subcategoriesCount: cat._count.subcategories,
+      subcategories: cat.subcategories.map((sub) => ({
+        id: sub.id,
+        name: sub.name,
+        categoryId: sub.categoryId,
+      })),
       createdAt: cat.createdAt,
       updatedAt: cat.updatedAt,
     }))

@@ -1,17 +1,20 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
-// GET /api/products/counts - Get product counts per category
+// GET /api/products/counts - Get product counts per category (dynamic from DB)
 export async function GET() {
   try {
-    const categories = ['Photos', 'Graphics', 'Templates', 'Fonts', '3D', 'Icons']
+    // Get all categories from the database
+    const categories = await db.category.findMany({
+      select: { name: true },
+    })
 
     const counts = await Promise.all(
-      categories.map(async (category) => {
+      categories.map(async (cat) => {
         const count = await db.product.count({
-          where: { category },
+          where: { category: cat.name },
         })
-        return { category, count }
+        return { category: cat.name, count }
       })
     )
 

@@ -1,32 +1,170 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
-// POST /api/categories/seed - Seed default categories
+// POST /api/categories/seed - Seed Canva template categories with subcategories
 export async function POST() {
   try {
-    const categories = [
-      { name: 'Photos', icon: 'faCamera', showInNav: true, showInHero: true },
-      { name: 'Graphics', icon: 'faPalette', showInNav: true, showInHero: true },
-      { name: 'Templates', icon: 'faFileAlt', showInNav: true, showInHero: true },
-      { name: 'Fonts', icon: 'faFont', showInNav: true, showInHero: true },
-      { name: '3D', icon: 'faCube', showInNav: true, showInHero: true },
-      { name: 'Icons', icon: 'faIcons', showInNav: true, showInHero: true },
+    // Clear existing data
+    await db.subcategory.deleteMany()
+    await db.category.deleteMany()
+
+    const categoryData = [
+      {
+        name: 'Most Purchased',
+        icon: 'faFire',
+        showInNav: true,
+        showInHero: true,
+        subcategories: [
+          'Resume Templates',
+          'Social Media Posts',
+          'YouTube Thumbnails',
+          'Presentation Slides',
+          'Instagram Stories',
+          'Business Cards',
+        ],
+      },
+      {
+        name: 'Resume & CV',
+        icon: 'faBriefcase',
+        showInNav: true,
+        showInHero: true,
+        subcategories: [
+          'Software Engineer Resume',
+          'Creative Resume',
+          'Executive Resume',
+          'Entry Level Resume',
+          'Academic CV',
+          'Modern Resume',
+          'Minimalist Resume',
+          'Infographic Resume',
+        ],
+      },
+      {
+        name: 'Social Media',
+        icon: 'faBullhorn',
+        showInNav: true,
+        showInHero: true,
+        subcategories: [
+          'Instagram Posts',
+          'Instagram Stories',
+          'Facebook Covers',
+          'Twitter Headers',
+          'LinkedIn Banners',
+          'Pinterest Pins',
+          'TikTok Covers',
+          'Social Media Kits',
+        ],
+      },
+      {
+        name: 'YouTube',
+        icon: 'faVideo',
+        showInNav: true,
+        showInHero: true,
+        subcategories: [
+          'YouTube Thumbnails',
+          'YouTube Banners',
+          'YouTube Outros',
+          'YouTube Intros',
+          'Video Thumbnails',
+          'Gaming Thumbnails',
+          'Vlog Thumbnails',
+          'Tutorial Thumbnails',
+        ],
+      },
+      {
+        name: 'Presentations',
+        icon: 'faLayerGroup',
+        showInNav: true,
+        showInHero: true,
+        subcategories: [
+          'Business Pitch Deck',
+          'Startup Pitch Deck',
+          'Marketing Presentation',
+          'Education Slides',
+          'Portfolio Presentation',
+          'Keynote Templates',
+          'Webinar Slides',
+          'Company Overview',
+        ],
+      },
+      {
+        name: 'Education',
+        icon: 'faGraduationCap',
+        showInNav: true,
+        showInHero: false,
+        subcategories: [
+          'Lesson Plans',
+          'Worksheets',
+          'Flashcards',
+          'Certificate Templates',
+          'Report Cards',
+          'Classroom Posters',
+          'School Newsletters',
+        ],
+      },
+      {
+        name: 'Marketing',
+        icon: 'faChartLine',
+        showInNav: true,
+        showInHero: false,
+        subcategories: [
+          'Email Headers',
+          'Flyers & Posters',
+          'Brochures',
+          'Newsletters',
+          'Infographics',
+          'White Papers',
+          'Case Studies',
+          'Ebooks',
+        ],
+      },
+      {
+        name: 'Invitations',
+        icon: 'faHeart',
+        showInNav: false,
+        showInHero: true,
+        subcategories: [
+          'Wedding Invitations',
+          'Birthday Invitations',
+          'Party Invitations',
+          'Baby Shower',
+          'Engagement Party',
+          'Graduation Announcements',
+          'Save the Date',
+        ],
+      },
     ]
 
     const results = []
-    for (const cat of categories) {
-      const result = await db.category.upsert({
-        where: { name: cat.name },
-        update: { icon: cat.icon, showInNav: cat.showInNav, showInHero: cat.showInHero },
-        create: { name: cat.name, icon: cat.icon, showInNav: cat.showInNav, showInHero: cat.showInHero },
+    for (const catData of categoryData) {
+      const category = await db.category.create({
+        data: {
+          name: catData.name,
+          icon: catData.icon,
+          showInNav: catData.showInNav,
+          showInHero: catData.showInHero,
+        },
       })
-      results.push(result)
+
+      for (const subName of catData.subcategories) {
+        await db.subcategory.create({
+          data: {
+            name: subName,
+            categoryId: category.id,
+          },
+        })
+      }
+
+      results.push({
+        ...category,
+        subcategoriesCount: catData.subcategories.length,
+      })
     }
 
     return NextResponse.json({
-      message: 'Categories seeded successfully',
-      count: results.length,
-      categories: results,
+      message: 'Canva template categories seeded successfully',
+      categories: results.length,
+      subcategories: categoryData.reduce((sum, c) => sum + c.subcategories.length, 0),
     })
   } catch (error) {
     console.error('Error seeding categories:', error)
