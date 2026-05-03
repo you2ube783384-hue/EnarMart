@@ -4,8 +4,8 @@ cd /home/z/my-project
 # Install dependencies
 bun install
 
-# Push database
-bun run db:push
+# Generate Prisma client (don't push - we use Turso)
+bun run db:generate
 
 # Start server with auto-restart
 while true; do

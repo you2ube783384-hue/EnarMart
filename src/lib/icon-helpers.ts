@@ -15,6 +15,18 @@ import {
   faLayerGroup,
   faStar,
   faSearch,
+  faFire,
+  faVideo,
+  faBriefcase,
+  faGraduationCap,
+  faBullhorn,
+  faNewspaper,
+  faHeart,
+  faChartLine,
+  faCrown,
+  faWandMagicSparkles,
+  faGift,
+  faShop,
 } from "@fortawesome/free-solid-svg-icons"
 
 const ICON_MAP: Record<string, unknown> = {
@@ -34,6 +46,18 @@ const ICON_MAP: Record<string, unknown> = {
   faLayerGroup,
   faStar,
   faSearch,
+  faFire,
+  faVideo,
+  faBriefcase,
+  faGraduationCap,
+  faBullhorn,
+  faNewspaper,
+  faHeart,
+  faChartLine,
+  faCrown,
+  faWandMagicSparkles,
+  faGift,
+  faShop,
 }
 
 export function getIconDefinition(iconName: string) {
@@ -57,6 +81,18 @@ export const FA_ICON_MAP: Record<string, string> = {
   faLayerGroup: "Layers",
   faStar: "Star",
   faSearch: "Search",
+  faFire: "Fire/Trending",
+  faVideo: "Video/YouTube",
+  faBriefcase: "Resume/Business",
+  faGraduationCap: "Education",
+  faBullhorn: "Social Media",
+  faNewspaper: "Blog/Article",
+  faHeart: "Lifestyle",
+  faChartLine: "Analytics",
+  faCrown: "Premium",
+  faWandMagicSparkles: "Creative",
+  faGift: "Free/Bundle",
+  faShop: "Shop/Store",
 }
 
 export const FA_ICON_OPTIONS = Object.keys(FA_ICON_MAP)

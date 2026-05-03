@@ -5,46 +5,46 @@ import Link from "next/link"
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-  faCamera,
-  faPalette,
-  faTableColumns,
-  faFont,
-  faCube,
-  faShapes,
+  faFire,
+  faBriefcase,
+  faBullhorn,
+  faVideo,
+  faLayerGroup,
+  faGraduationCap,
+  faHeart,
+  faChartLine,
+  faCrown,
   faEnvelope,
   faArrowRight,
+  faShop,
 } from "@fortawesome/free-solid-svg-icons"
-import {
-  faGithub,
-  faXTwitter,
-} from "@fortawesome/free-brands-svg-icons"
 
 const footerLinks = {
   categories: [
-    { name: "Photos", icon: faCamera },
-    { name: "Graphics", icon: faPalette },
-    { name: "Templates", icon: faTableColumns },
-    { name: "Fonts", icon: faFont },
-    { name: "3D", icon: faCube },
-    { name: "Icons", icon: faShapes },
+    { name: "Most Purchased", icon: faFire, href: "/shop?category=Most+Purchased" },
+    { name: "Resume & CV", icon: faBriefcase, href: "/shop?category=Resume+%26+CV" },
+    { name: "Social Media", icon: faBullhorn, href: "/shop?category=Social+Media" },
+    { name: "YouTube", icon: faVideo, href: "/shop?category=YouTube" },
+    { name: "Presentations", icon: faLayerGroup, href: "/shop?category=Presentations" },
+    { name: "Education", icon: faGraduationCap, href: "/shop?category=Education" },
   ],
   company: [
-    { name: "About Us", href: "#" },
-    { name: "Careers", href: "#" },
+    { name: "About Us", href: "/about" },
+    { name: "Contact", href: "/contact" },
     { name: "Blog", href: "#" },
-    { name: "Press", href: "#" },
+    { name: "Careers", href: "#" },
   ],
   support: [
-    { name: "Help Center", href: "#" },
-    { name: "Contact Us", href: "#" },
-    { name: "FAQ", href: "#" },
-    { name: "Terms of Service", href: "#" },
+    { name: "Help Center", href: "/help" },
+    { name: "FAQ", href: "/faq" },
+    { name: "How It Works", href: "#" },
+    { name: "Canva Guide", href: "#" },
   ],
   legal: [
-    { name: "Privacy Policy", href: "#" },
-    { name: "License Terms", href: "#" },
-    { name: "Refund Policy", href: "#" },
-    { name: "Cookie Policy", href: "#" },
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Service", href: "/terms" },
+    { name: "Refund Policy", href: "/refund" },
+    { name: "License", href: "/license" },
   ],
 }
 
@@ -60,7 +60,7 @@ export function Footer() {
                 Stay in the loop
               </h3>
               <p className="text-sm text-white/50">
-                Get the latest products, deals, and creative inspiration delivered to your inbox.
+                Get new Canva templates, deals, and creative inspiration delivered to your inbox.
               </p>
             </div>
             <div className="flex items-center gap-2 w-full md:w-auto">
@@ -86,22 +86,16 @@ export function Footer() {
             <Link href="/" className="inline-block mb-4">
               <Image
                 src="/logo.png"
-                alt="DigiMarket"
+                alt="EnarMart"
                 width={160}
                 height={40}
                 className="h-9 w-auto"
               />
             </Link>
             <p className="text-sm text-white/40 max-w-sm mb-5 leading-relaxed">
-              The marketplace for premium digital products. Discover handcrafted assets from talented creators worldwide.
+              The marketplace for premium Canva templates. Beautiful, ready-to-edit designs for resumes, social media, YouTube, and more.
             </p>
             <div className="flex items-center gap-2">
-              <a href="#" className="size-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <FontAwesomeIcon icon={faXTwitter} className="text-xs text-white/60" />
-              </a>
-              <a href="#" className="size-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <FontAwesomeIcon icon={faGithub} className="text-xs text-white/60" />
-              </a>
               <a href="#" className="size-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
                 <FontAwesomeIcon icon={faEnvelope} className="text-xs text-white/60" />
               </a>
@@ -116,10 +110,10 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.categories.map((link) => (
                 <li key={link.name}>
-                  <button className="flex items-center gap-2 text-sm text-white/35 hover:text-white/70 transition-colors cursor-pointer">
+                  <Link href={link.href} className="flex items-center gap-2 text-sm text-white/35 hover:text-white/70 transition-colors">
                     <FontAwesomeIcon icon={link.icon} className="text-[0.6rem] w-3" />
                     {link.name}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -133,9 +127,9 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
+                  <Link href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -149,9 +143,9 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
+                  <Link href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -163,12 +157,15 @@ export function Footer() {
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/25">
-            &copy; {new Date().getFullYear()} DigiMarket. All rights reserved.
+            &copy; {new Date().getFullYear()} EnarMart. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
-            <a href="#" className="text-xs text-white/25 hover:text-white/40 transition-colors">Privacy</a>
-            <a href="#" className="text-xs text-white/25 hover:text-white/40 transition-colors">Terms</a>
-            <a href="#" className="text-xs text-white/25 hover:text-white/40 transition-colors">Sitemap</a>
+            <Link href="/privacy" className="text-xs text-white/25 hover:text-white/40 transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-xs text-white/25 hover:text-white/40 transition-colors">Terms</Link>
+            <Link href="/shop" className="text-xs text-white/25 hover:text-white/40 transition-colors flex items-center gap-1">
+              <FontAwesomeIcon icon={faShop} className="text-[0.5rem]" />
+              Shop
+            </Link>
           </div>
         </div>
       </div>

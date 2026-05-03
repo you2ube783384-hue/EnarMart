@@ -19,22 +19,22 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "DigiMarket - Premium Digital Products Marketplace",
-  description: "Discover handcrafted fonts, graphics, templates, and more from talented creators worldwide. Everything you need to bring your creative vision to life.",
-  keywords: ["digital products", "fonts", "graphics", "templates", "3D assets", "icons", "creative market", "stock photos"],
-  authors: [{ name: "DigiMarket" }],
+  title: "EnarMart - Premium Canva Templates Store",
+  description: "Discover beautiful, ready-to-edit Canva templates for resumes, social media, YouTube, presentations, and more. Download instantly and customize in minutes.",
+  keywords: ["canva templates", "resume templates", "social media templates", "youtube thumbnails", "presentation templates", "canva", "digital templates"],
+  authors: [{ name: "EnarMart" }],
   icons: {
     icon: "/favicon.png",
   },
   openGraph: {
-    title: "DigiMarket - Premium Digital Products Marketplace",
-    description: "Discover handcrafted fonts, graphics, templates, and more from talented creators worldwide.",
+    title: "EnarMart - Premium Canva Templates Store",
+    description: "Beautiful, ready-to-edit Canva templates for every project. Download instantly.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DigiMarket - Premium Digital Products Marketplace",
-    description: "Discover handcrafted fonts, graphics, templates, and more from talented creators worldwide.",
+    title: "EnarMart - Premium Canva Templates Store",
+    description: "Beautiful, ready-to-edit Canva templates for every project.",
   },
 };
 
