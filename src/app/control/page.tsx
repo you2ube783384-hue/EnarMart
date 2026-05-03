@@ -79,6 +79,7 @@ interface LibraryImage {
   sizeFormatted: string
   modifiedAt: string
   extension: string
+  source: 'local' | 'blob'
 }
 
 interface CategoryItem {
@@ -264,12 +265,12 @@ function ImageLibraryTab() {
     fetchImages()
   }, [fetchImages])
 
-  const handleDelete = async (filename: string) => {
+  const handleDelete = async (filename: string, source: 'local' | 'blob' = 'local') => {
     if (!confirm(`Are you sure you want to delete "${filename}"? This cannot be undone.`)) return
 
     setDeleting(filename)
     try {
-      const res = await fetch(`/api/library?filename=${encodeURIComponent(filename)}`, {
+      const res = await fetch(`/api/library?filename=${encodeURIComponent(filename)}&source=${source}`, {
         method: "DELETE",
       })
       if (res.ok) {
@@ -438,11 +439,16 @@ function ImageLibraryTab() {
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-[#000000]/0 group-hover:bg-[#000000]/20 transition-colors" />
 
-                  {/* Extension badge */}
-                  <div className="absolute top-1.5 left-1.5">
+                  {/* Extension + source badge */}
+                  <div className="absolute top-1.5 left-1.5 flex items-center gap-1">
                     <span className="text-[9px] font-bold uppercase bg-[#ffffff]/90 text-[#000000] px-1.5 py-0.5 rounded">
                       {img.extension}
                     </span>
+                    {img.source === 'blob' && (
+                      <span className="text-[8px] font-bold bg-[#00a67d] text-white px-1.5 py-0.5 rounded">
+                        CLOUD
+                      </span>
+                    )}
                   </div>
 
                   {/* Selected check */}
@@ -533,7 +539,7 @@ function ImageLibraryTab() {
                   variant="outline"
                   size="sm"
                   className="w-full gap-1.5 text-xs justify-center text-destructive hover:text-destructive hover:bg-destructive/5 border-destructive/20"
-                  onClick={() => handleDelete(selectedImage.filename)}
+                  onClick={() => handleDelete(selectedImage.filename, selectedImage.source)}
                   disabled={deleting === selectedImage.filename}
                 >
                   <FontAwesomeIcon
@@ -593,7 +599,7 @@ function ImageLibraryTab() {
                 size="icon"
                 variant="ghost"
                 className="size-8 text-destructive hover:text-destructive"
-                onClick={() => handleDelete(selectedImage.filename)}
+                onClick={() => handleDelete(selectedImage.filename, selectedImage.source)}
                 disabled={deleting === selectedImage.filename}
               >
                 <FontAwesomeIcon
@@ -1269,13 +1275,16 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [librarySearch, setLibrarySearch] = useState("")
   const [libraryLoading, setLibraryLoading] = useState(false)
 
-  const [dbCategories, setDbCategories] = useState<string[]>(["Photos", "Graphics", "Templates", "Fonts", "3D", "Icons"])
+  const [dbCategories, setDbCategories] = useState<string[]>([])
+  const [dbCategoriesWithSubs, setDbCategoriesWithSubs] = useState<CategoryItem[]>([])
+  const [selectedDbCategory, setSelectedDbCategory] = useState<string>("")
+  const [dbSubcategories, setDbSubcategories] = useState<string[]>([])
 
   const emptyForm = {
     title: "",
     description: "",
     price: "",
-    category: "Graphics",
+    category: "",
     imageUrl: "",
     viewUrl: "",
     featured: false,
@@ -1314,9 +1323,17 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       if (Array.isArray(data) && data.length > 0) {
         const catNames = data.map((cat: CategoryItem) => cat.name)
         setDbCategories(catNames)
+        setDbCategoriesWithSubs(data)
         // Update form default if current category not in list
         if (form.category && !catNames.includes(form.category)) {
           setForm((prev) => ({ ...prev, category: catNames[0] || "" }))
+        }
+        // Update subcategories for selected category
+        if (form.category) {
+          const selectedCat = data.find((cat: CategoryItem) => cat.name === form.category)
+          if (selectedCat) {
+            setSelectedDbCategory(selectedCat.id)
+          }
         }
       }
     } catch (error) {
@@ -1832,7 +1849,28 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     <Label>Category *</Label>
                     <Select
                       value={form.category}
-                      onValueChange={(value) => setForm((prev) => ({ ...prev, category: value }))}
+                      onValueChange={(value) => {
+                        setForm((prev) => ({ ...prev, category: value }))
+                        // Update subcategories when category changes
+                        const selectedCat = dbCategoriesWithSubs.find((cat) => cat.name === value)
+                        if (selectedCat) {
+                          setSelectedDbCategory(selectedCat.id)
+                          // Fetch subcategories for this category
+                          fetch(`/api/subcategories?categoryId=${selectedCat.id}`)
+                            .then((res) => res.json())
+                            .then((data) => {
+                              if (Array.isArray(data)) {
+                                setDbSubcategories(data.map((sub: { name: string }) => sub.name))
+                              } else {
+                                setDbSubcategories([])
+                              }
+                            })
+                            .catch(() => setDbSubcategories([]))
+                        } else {
+                          setSelectedDbCategory("")
+                          setDbSubcategories([])
+                        }
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
@@ -1847,6 +1885,40 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     </Select>
                   </div>
                 </div>
+
+                {/* Subcategory selector (shown when category has subcategories) */}
+                {dbSubcategories.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Subcategory</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {dbSubcategories.map((sub) => (
+                        <button
+                          key={sub}
+                          type="button"
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
+                            form.description.includes(sub)
+                              ? "bg-[#00a67d] text-white border-[#00a67d]"
+                              : "bg-white text-[#555770] border-[#e8e8ed] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                          }`}
+                          onClick={() => {
+                            // Add subcategory name to description if not already there
+                            if (!form.description.includes(sub)) {
+                              setForm((prev) => ({
+                                ...prev,
+                                description: prev.description ? `${prev.description} ${sub}` : sub,
+                              }))
+                            }
+                          }}
+                        >
+                          {sub}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-[#000000]/50">
+                      Click to add subcategory keywords to the product description
+                    </p>
+                  </div>
+                )}
 
                 {/* View Now URL */}
                 <div className="space-y-2">

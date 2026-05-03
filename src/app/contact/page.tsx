@@ -6,6 +6,8 @@ import { Footer } from "@/components/Footer"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 
 const contactMethods = [
   {
@@ -45,12 +47,19 @@ export default function ContactPage() {
     subject: "",
     message: "",
   })
-  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // In production, this would send the form data to an API
-    setSubmitted(true)
+
+    // Build the mailto: URL with all form data
+    const to = "support@enarmart.com"
+    const subject = encodeURIComponent(formData.subject || `Contact from ${formData.name}`)
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+    )
+
+    // Open the user's default email client
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`
   }
 
   return (
@@ -67,7 +76,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-[#555770] text-base md:text-lg max-w-2xl mx-auto">
-            Have a question, suggestion, or need help? We&apos;d love to hear from you. Our team typically responds within 24-48 hours.
+            Have a question, suggestion, or need help? We&apos;d love to hear from you. Fill out the form and we&apos;ll open your email app to send it.
           </p>
         </div>
       </section>
@@ -110,86 +119,62 @@ export default function ContactPage() {
                 Send Us a Message
               </h2>
 
-              {submitted ? (
-                <div className="bg-white rounded-xl p-8 border border-[#00a67d]/20 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#00a67d]/10 flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-[#00a67d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3
-                    className="text-lg font-semibold text-[#1a1a2e] mb-2"
-                    style={{ fontFamily: "var(--font-poppins)" }}
-                  >
-                    Message Sent!
-                  </h3>
-                  <p className="text-[#555770] text-sm">
-                    Thank you for reaching out. We&apos;ll get back to you within 24-48 hours.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSubmitted(false)
-                      setFormData({ name: "", email: "", subject: "", message: "" })
-                    }}
-                    className="mt-4 text-sm text-[#00a67d] hover:underline cursor-pointer"
-                  >
-                    Send another message
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 md:p-8 border border-[#e8e8ed] space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Full Name</label>
-                      <Input
-                        required
-                        placeholder="Your name"
-                        className="h-10 bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Email Address</label>
-                      <Input
-                        required
-                        type="email"
-                        placeholder="you@example.com"
-                        className="h-10 bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      />
-                    </div>
-                  </div>
+              <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 md:p-8 border border-[#e8e8ed] space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Subject</label>
+                    <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Full Name</label>
                     <Input
                       required
-                      placeholder="What's this about?"
+                      placeholder="Your name"
                       className="h-10 bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Message</label>
-                    <Textarea
+                    <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Email Address</label>
+                    <Input
                       required
-                      placeholder="Tell us how we can help..."
-                      rows={5}
-                      className="bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20 resize-none"
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      type="email"
+                      placeholder="you@example.com"
+                      className="h-10 bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                   </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-11 bg-[#00a67d] hover:bg-[#008f6b] text-white font-semibold rounded-lg"
-                  >
-                    Send Message
-                  </Button>
-                </form>
-              )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Subject</label>
+                  <Input
+                    required
+                    placeholder="What's this about?"
+                    className="h-10 bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#1a1a2e] mb-1.5">Message</label>
+                  <Textarea
+                    required
+                    placeholder="Tell us how we can help..."
+                    rows={5}
+                    className="bg-[#fafafa] border-[#e8e8ed] focus:border-[#00a67d] focus:ring-[#00a67d]/20 resize-none"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-11 bg-[#00a67d] hover:bg-[#008f6b] text-white font-semibold rounded-lg gap-2"
+                >
+                  <FontAwesomeIcon icon={faPaperPlane} className="text-xs" />
+                  Open in Email App
+                </Button>
+                <p className="text-xs text-[#8e8ea0] text-center">
+                  Clicking this button will open your default email app with the message pre-filled
+                </p>
+              </form>
             </div>
 
             {/* FAQ Sidebar */}

@@ -12,7 +12,6 @@ import {
   faLayerGroup,
   faGraduationCap,
   faEnvelope,
-  faArrowRight,
   faShop,
 } from "@fortawesome/free-solid-svg-icons"
 
@@ -28,8 +27,6 @@ const footerLinks = {
   company: [
     { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
-    { name: "Blog", href: "#" },
-    { name: "Careers", href: "#" },
   ],
   support: [
     { name: "Help Center", href: "/help" },
@@ -48,36 +45,6 @@ const footerLinks = {
 export function Footer() {
   return (
     <footer className="bg-[#1a1a2e] text-white mt-auto">
-      {/* Newsletter Section */}
-      <div className="border-b border-white/5">
-        <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-14 md:py-16">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left">
-              <h3
-                className="text-xl font-bold mb-2 tracking-tight"
-                style={{ fontFamily: "var(--font-poppins)" }}
-              >
-                Stay in the loop
-              </h3>
-              <p className="text-sm text-white/40 max-w-md leading-relaxed">
-                Get new Canva templates, exclusive deals, and creative inspiration delivered straight to your inbox.
-              </p>
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-1 md:w-72 h-12 bg-white/5 border border-white/10 rounded-xl px-5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#00a67d]/50 focus:ring-2 focus:ring-[#00a67d]/15 transition-all"
-              />
-              <button className="h-12 px-6 bg-[#00a67d] hover:bg-[#008f6b] text-white text-sm font-bold rounded-xl transition-all duration-300 flex items-center gap-2 shrink-0 shadow-lg shadow-[#00a67d]/20 hover:shadow-xl hover:shadow-[#00a67d]/30">
-                Subscribe
-                <FontAwesomeIcon icon={faArrowRight} className="text-[0.6rem]" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main footer */}
       <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-14 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-16">
@@ -96,7 +63,7 @@ export function Footer() {
               The marketplace for premium Canva templates. Beautiful, ready-to-edit designs for resumes, social media, YouTube, and more.
             </p>
             <div className="flex items-center gap-3">
-              <a href="#" className="size-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-200 hover:scale-110">
+              <a href="mailto:support@enarmart.com" className="size-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-200 hover:scale-110">
                 <FontAwesomeIcon icon={faEnvelope} className="text-sm text-white/50" />
               </a>
             </div>

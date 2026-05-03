@@ -124,3 +124,33 @@ Stage Summary:
 - Category cards with teal icon boxes
 - Gradient backgrounds for hero and page headers
 - All legal pages updated to match new design language
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Fix admin categories/subcategories, image library Vercel Blob, remove newsletter, contact mailto, remove blog/career, SEO setup
+
+Work Log:
+- Updated /api/library/route.ts to fetch images from both local filesystem AND Vercel Blob (uses `list` from @vercel/blob)
+- Added `source: 'local' | 'blob'` field to LibraryImage interface in control page
+- Updated delete handler to pass source parameter (local vs blob) for proper deletion
+- Added "CLOUD" badge on images from Vercel Blob in the image library grid
+- Updated admin panel product form: categories now fetched in real-time from DB with subcategories
+- Added subcategory selector in Add Product form - when category changes, subcategories are fetched and shown as clickable pills
+- Removed Newsletter section from Footer.tsx
+- Removed Blog and Career links from Footer company section
+- Updated Contact page: submit button now opens mailto: with form data pre-filled (name, email, subject, message)
+- Created /api/library route with Vercel Blob support for listing, deleting, and replacing images
+- Created src/app/robots.ts - auto-generated robots.txt allowing all crawlers except /control and /api/
+- Created src/app/sitemap.ts - auto-generated sitemap.xml with all public pages and priorities
+- Updated src/app/layout.tsx with comprehensive SEO: OG tags, Twitter cards, JSON-LD structured data, Google/Bing verification placeholders
+- Removed conflicting public/robots.txt file
+- Created crawl/index.md with step-by-step guide for Google Search Console and Bing Webmaster Tools verification
+- All pages return 200 OK, lint passes clean
+
+Stage Summary:
+- Admin panel: real-time categories with subcategory selector, Vercel Blob image library
+- Footer: newsletter removed, blog/career removed
+- Contact: opens email app with pre-filled data via mailto:
+- SEO: robots.txt, sitemap.xml, structured data, OG tags, verification placeholders
+- Guide written at crawl/index.md for post-deployment SEO setup
