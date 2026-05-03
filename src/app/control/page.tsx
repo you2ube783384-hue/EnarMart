@@ -55,6 +55,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { getIconDefinition, FA_ICON_MAP, FA_ICON_OPTIONS } from "@/lib/icon-helpers"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -1263,6 +1264,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [imagePreview, setImagePreview] = useState<string>("")
   const [activeTab, setActiveTab] = useState("products")
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [showLibraryDialog, setShowLibraryDialog] = useState(false)
+  const [libraryImages, setLibraryImages] = useState<LibraryImage[]>([])
+  const [librarySearch, setLibrarySearch] = useState("")
+  const [libraryLoading, setLibraryLoading] = useState(false)
 
   const [dbCategories, setDbCategories] = useState<string[]>(["Photos", "Graphics", "Templates", "Fonts", "3D", "Icons"])
 
@@ -1286,6 +1291,19 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       console.error("Failed to fetch products:", error)
     } finally {
       setLoading(false)
+    }
+  }, [])
+
+  const fetchLibraryImages = useCallback(async () => {
+    setLibraryLoading(true)
+    try {
+      const res = await fetch("/api/library")
+      const data = await res.json()
+      setLibraryImages(data.images || [])
+    } catch (error) {
+      console.error("Failed to fetch library images:", error)
+    } finally {
+      setLibraryLoading(false)
     }
   }, [])
 
@@ -1424,11 +1442,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               Admin Panel
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Link href="/" target="_blank">
               <Button variant="ghost" size="sm" className="text-[#ffffff]/60 hover:text-[#ffffff] hover:bg-[#ffffff]/10 text-xs gap-1.5">
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-[0.6rem]" />
-                View Store
+                <span className="hidden sm:inline">View Store</span>
               </Button>
             </Link>
             <Button
@@ -1438,7 +1456,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               onClick={fetchProducts}
             >
               <FontAwesomeIcon icon={faRefresh} className="text-[0.6rem]" />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Button
               variant="ghost"
@@ -1447,7 +1465,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               onClick={handleLogout}
             >
               <FontAwesomeIcon icon={faRightFromBracket} className="text-[0.6rem]" />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
         </div>
@@ -1457,31 +1475,33 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <main className="container mx-auto px-4 py-6">
         <div className="bg-[#ffffff] rounded-xl border shadow-sm overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <div className="border-b px-6 pt-4">
-              <div className="flex items-center justify-between">
-                <TabsList>
-                  <TabsTrigger value="products">
-                    Products
-                    <Badge className="ml-2 bg-[#e6f7f2] text-[#333333] text-[10px] border-0">
-                      {products.length}
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger value="add">
-                    {editingId ? "Edit Product" : "Add Product"}
-                  </TabsTrigger>
-                  <TabsTrigger value="categories">
-                    <FontAwesomeIcon icon={faFolder} className="mr-1.5 text-xs" />
-                    Categories
-                  </TabsTrigger>
-                  <TabsTrigger value="library">
-                    <FontAwesomeIcon icon={faFolderOpen} className="mr-1.5 text-xs" />
-                    Library
-                  </TabsTrigger>
-                </TabsList>
+            <div className="border-b px-4 sm:px-6 pt-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible">
+                  <TabsList className="flex-shrink-0">
+                    <TabsTrigger value="products">
+                      Products
+                      <Badge className="ml-2 bg-[#e6f7f2] text-[#333333] text-[10px] border-0">
+                        {products.length}
+                      </Badge>
+                    </TabsTrigger>
+                    <TabsTrigger value="add">
+                      {editingId ? "Edit Product" : "Add Product"}
+                    </TabsTrigger>
+                    <TabsTrigger value="categories">
+                      <FontAwesomeIcon icon={faFolder} className="mr-1.5 text-xs" />
+                      Categories
+                    </TabsTrigger>
+                    <TabsTrigger value="library">
+                      <FontAwesomeIcon icon={faFolderOpen} className="mr-1.5 text-xs" />
+                      Library
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
 
                 <Button
                   size="sm"
-                  className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b]"
+                  className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] hidden sm:flex"
                   onClick={() => {
                     resetForm()
                     setActiveTab("add")
@@ -1494,7 +1514,20 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             {/* Products List Tab */}
-            <TabsContent value="products" className="p-6 mt-0">
+            <TabsContent value="products" className="p-4 sm:p-6 mt-0">
+              {/* Mobile: Add Product button */}
+              <div className="sm:hidden mb-4">
+                <Button
+                  className="w-full gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-11"
+                  onClick={() => {
+                    resetForm()
+                    setActiveTab("add")
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="text-xs" />
+                  Add Product
+                </Button>
+              </div>
               {loading ? (
                 <div className="space-y-3">
                   {Array.from({ length: 6 }).map((_, i) => (
@@ -1509,7 +1542,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--font-poppins)" }}>No products yet</h3>
                   <p className="text-sm text-[#000000]/50 mb-4">Add your first product to get started</p>
                   <Button
-                    className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b]"
+                    className="gap-1.5 bg-[#00a67d] text-white hover:bg-[#008f6b] h-11"
                     onClick={() => {
                       resetForm()
                       setActiveTab("add")
@@ -1520,33 +1553,33 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-h-[calc(100vh-220px)] overflow-y-auto">
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className="flex items-center gap-3 p-3 rounded-lg border hover:bg-[#e6f7f2]/30 transition-colors"
+                      className="rounded-lg border hover:bg-[#e6f7f2]/30 transition-colors overflow-hidden"
                     >
-                      <div className="size-14 rounded-md overflow-hidden bg-[#e6f7f2] shrink-0">
+                      {/* Card image */}
+                      <div className="relative aspect-video bg-[#e6f7f2]">
                         {product.imageUrl && (
                           <Image
                             src={product.imageUrl}
                             alt={product.title}
-                            width={56}
-                            height={56}
-                            className="size-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           />
                         )}
+                        {product.featured && (
+                          <Badge className="absolute top-2 left-2 bg-[#fff8e1] text-[#e67e22] text-[10px] border-0">
+                            Featured
+                          </Badge>
+                        )}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
-                          {product.featured && (
-                            <Badge className="bg-[#fff8e1] text-[#e67e22] text-[10px] border-0 shrink-0">
-                              Featured
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5">
+                      {/* Card content */}
+                      <div className="p-3">
+                        <h4 className="font-medium text-sm truncate" style={{ fontFamily: "var(--font-poppins)" }}>{product.title}</h4>
+                        <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-[10px] py-0 border-[#000000]/20 text-[#000000]/60">
                             {product.category}
                           </Badge>
@@ -1558,28 +1591,30 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                             </span>
                           )}
                         </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="size-8"
-                          onClick={() => handleEdit(product)}
-                        >
-                          <FontAwesomeIcon icon={faPen} className="text-xs" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="size-8 text-destructive hover:text-destructive"
-                          onClick={() => handleDelete(product.id)}
-                          disabled={deleting === product.id}
-                        >
-                          <FontAwesomeIcon
-                            icon={deleting === product.id ? faSpinner : faTrash}
-                            className={`text-xs ${deleting === product.id ? "animate-spin" : ""}`}
-                          />
-                        </Button>
+                        <div className="flex items-center gap-2 mt-3 pt-3 border-t">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 gap-1.5 h-9 text-xs"
+                            onClick={() => handleEdit(product)}
+                          >
+                            <FontAwesomeIcon icon={faPen} className="text-[0.65rem]" />
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 gap-1.5 h-9 text-xs text-destructive hover:text-destructive hover:bg-destructive/5 border-destructive/20"
+                            onClick={() => handleDelete(product.id)}
+                            disabled={deleting === product.id}
+                          >
+                            <FontAwesomeIcon
+                              icon={deleting === product.id ? faSpinner : faTrash}
+                              className={`text-[0.65rem] ${deleting === product.id ? "animate-spin" : ""}`}
+                            />
+                            Delete
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1588,7 +1623,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </TabsContent>
 
             {/* Add/Edit Product Tab */}
-            <TabsContent value="add" className="p-6 mt-0">
+            <TabsContent value="add" className="p-4 sm:p-6 mt-0">
               <div className="max-w-2xl space-y-5">
                 <h3 className="text-lg font-semibold" style={{ fontFamily: "var(--font-poppins)" }}>
                   {editingId ? "Edit Product" : "Add New Product"}
@@ -1597,8 +1632,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 {/* Image Upload */}
                 <div className="space-y-2">
                   <Label>Product Image</Label>
-                  <div className="flex gap-4 items-start">
-                    <div className="relative size-32 rounded-lg border-2 border-dashed overflow-hidden bg-[#e6f7f2] shrink-0">
+                  <div className="flex flex-col sm:flex-row gap-4 items-start">
+                    <div className="relative size-28 sm:size-32 rounded-lg border-2 border-dashed overflow-hidden bg-[#e6f7f2] shrink-0 mx-auto sm:mx-0">
                       {imagePreview || form.imageUrl ? (
                         <>
                           <Image
@@ -1608,7 +1643,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                             className="object-cover"
                           />
                           <button
-                            className="absolute top-1 right-1 size-5 rounded-full bg-[#000000]/60 text-[#ffffff] flex items-center justify-center hover:bg-[#000000]/80 transition-colors"
+                            className="absolute top-1 right-1 size-6 sm:size-5 rounded-full bg-[#000000]/60 text-[#ffffff] flex items-center justify-center hover:bg-[#000000]/80 transition-colors"
                             onClick={() => {
                               setForm((prev) => ({ ...prev, imageUrl: "" }))
                               setImagePreview("")
@@ -1624,7 +1659,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-2 w-full">
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -1635,7 +1670,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full gap-2"
+                        className="w-full gap-2 h-11"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
                       >
@@ -1644,6 +1679,18 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                           className={`text-sm ${uploading ? "animate-spin" : ""}`}
                         />
                         {uploading ? "Uploading..." : "Upload Image"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full gap-2 h-11"
+                        onClick={() => {
+                          fetchLibraryImages()
+                          setShowLibraryDialog(true)
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faFolderOpen} className="text-sm" />
+                        Select from Library
                       </Button>
                       <p className="text-xs text-[#000000]/50">
                         Or enter an image URL below
@@ -1658,6 +1705,87 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       />
                     </div>
                   </div>
+
+                  {/* Image Library Dialog */}
+                  <Dialog open={showLibraryDialog} onOpenChange={setShowLibraryDialog}>
+                    <DialogContent className="sm:max-w-3xl max-h-[85vh] flex flex-col">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                          <FontAwesomeIcon icon={faFolderOpen} className="text-[#00a67d]" />
+                          Select Image from Library
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="relative mb-3">
+                        <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#000000]/40 text-xs" />
+                        <Input
+                          placeholder="Search images..."
+                          className="pl-8 h-10"
+                          value={librarySearch}
+                          onChange={(e) => setLibrarySearch(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex-1 overflow-y-auto min-h-0">
+                        {libraryLoading ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                              <div key={i} className="aspect-square rounded-lg bg-[#e6f7f2] animate-pulse" />
+                            ))}
+                          </div>
+                        ) : libraryImages.length === 0 ? (
+                          <div className="text-center py-12">
+                            <div className="size-12 rounded-full bg-[#fff8e1] flex items-center justify-center mx-auto mb-3">
+                              <FontAwesomeIcon icon={faFolderOpen} className="text-lg text-[#000000]" />
+                            </div>
+                            <p className="text-sm text-[#000000]/50">No images in library</p>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            {libraryImages
+                              .filter((img) => img.filename.toLowerCase().includes(librarySearch.toLowerCase()))
+                              .map((img) => (
+                                <button
+                                  key={img.filename}
+                                  type="button"
+                                  className="group relative aspect-square rounded-lg border-2 overflow-hidden cursor-pointer transition-all hover:border-[#00a67d] hover:shadow-md focus:border-[#00a67d] focus:shadow-md focus:outline-none"
+                                  onClick={() => {
+                                    setForm((prev) => ({ ...prev, imageUrl: img.url }))
+                                    setImagePreview(img.url)
+                                    setShowLibraryDialog(false)
+                                    setLibrarySearch("")
+                                  }}
+                                >
+                                  <Image
+                                    src={img.url}
+                                    alt={img.filename}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                                  />
+                                  {/* Hover overlay */}
+                                  <div className="absolute inset-0 bg-[#000000]/0 group-hover:bg-[#000000]/20 transition-colors" />
+                                  {/* Extension badge */}
+                                  <div className="absolute top-1.5 left-1.5">
+                                    <span className="text-[9px] font-bold uppercase bg-[#ffffff]/90 text-[#000000] px-1.5 py-0.5 rounded">
+                                      {img.extension}
+                                    </span>
+                                  </div>
+                                  {/* Filename at bottom */}
+                                  <div className="absolute bottom-0 left-0 right-0 bg-[#000000]/60 px-1.5 py-1">
+                                    <p className="text-[9px] text-[#ffffff] truncate">{img.filename}</p>
+                                  </div>
+                                  {/* Select indicator on hover */}
+                                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="size-10 rounded-full bg-[#00a67d] flex items-center justify-center shadow-lg">
+                                      <FontAwesomeIcon icon={faCheck} className="text-[#ffffff] text-sm" />
+                                    </div>
+                                  </div>
+                                </button>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
                 {/* Title */}
@@ -1684,7 +1812,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </div>
 
                 {/* Price & Category */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="price">Price (USD) *</Label>
                     <div className="relative">
@@ -1752,7 +1880,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 {/* Submit */}
                 <div className="flex gap-3 pt-2">
                   <Button
-                    className="flex-1 gap-2 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80"
+                    className="flex-1 gap-2 bg-[#000000] text-[#ffffff] hover:bg-[#000000]/80 h-11"
                     onClick={handleSubmit}
                     disabled={saving || !form.title || !form.description || !form.price}
                   >
@@ -1765,6 +1893,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   {editingId && (
                     <Button
                       variant="outline"
+                      className="h-11"
                       onClick={() => {
                         resetForm()
                         setActiveTab("products")
