@@ -60,26 +60,26 @@ export default function AboutPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#f8f5f2] py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h1
-            className="text-3xl md:text-5xl font-bold text-[#333333] mb-6"
+            className="text-3xl md:text-5xl font-bold tracking-tight text-[#1a1a2e] mb-6"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             About EnarMart
           </h1>
-          <p className="text-[#666666] text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[#555770] text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             We&apos;re on a mission to make professional design accessible to everyone through premium Canva templates that are beautiful, affordable, and effortless to customize.
           </p>
         </div>
       </section>
 
       {/* Our Story */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
-          <div className="space-y-6 text-[#666666] leading-relaxed">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
+          <div className="space-y-6 text-[#555770] leading-relaxed">
             <h2
-              className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+              className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
               style={{ fontFamily: "var(--font-poppins)" }}
             >
               Our Story
@@ -98,8 +98,8 @@ export default function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-12 md:py-16 bg-[#f8f5f2]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-14 md:py-20 bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
@@ -109,7 +109,7 @@ export default function AboutPage() {
                 >
                   {stat.value}
                 </p>
-                <p className="text-sm text-[#666666]">{stat.label}</p>
+                <p className="text-sm text-[#555770]">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -117,10 +117,10 @@ export default function AboutPage() {
       </section>
 
       {/* Our Values */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-8 text-center"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-8 text-center"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             What We Stand For
@@ -129,15 +129,15 @@ export default function AboutPage() {
             {values.map((value) => (
               <div
                 key={value.title}
-                className="p-6 rounded-xl border border-[#e5e5e5] hover:border-[#00a67d]/30 hover:shadow-sm transition-all duration-200"
+                className="p-6 rounded-xl border border-[#e8e8ed] hover:border-[#00a67d]/30 hover:shadow-sm transition-all duration-200"
               >
                 <h3
-                  className="text-lg font-semibold text-[#333333] mb-2"
+                  className="text-lg font-semibold text-[#1a1a2e] mb-2"
                   style={{ fontFamily: "var(--font-poppins)" }}
                 >
                   {value.title}
                 </h3>
-                <p className="text-[#666666] text-sm leading-relaxed">
+                <p className="text-[#555770] text-sm leading-relaxed">
                   {value.description}
                 </p>
               </div>
@@ -147,10 +147,10 @@ export default function AboutPage() {
       </section>
 
       {/* Our Team */}
-      <section className="py-12 md:py-16 bg-[#f8f5f2]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-14 md:py-20 bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-8 text-center"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-8 text-center"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Meet the Team
@@ -159,7 +159,7 @@ export default function AboutPage() {
             {team.map((member) => (
               <div
                 key={member.name}
-                className="bg-white rounded-xl p-6 border border-[#e5e5e5]"
+                className="bg-white rounded-xl p-6 border border-[#e8e8ed]"
               >
                 <div className="w-14 h-14 rounded-full bg-[#00a67d]/10 flex items-center justify-center mb-4">
                   <span
@@ -170,13 +170,13 @@ export default function AboutPage() {
                   </span>
                 </div>
                 <h3
-                  className="text-base font-semibold text-[#333333] mb-0.5"
+                  className="text-base font-semibold text-[#1a1a2e] mb-0.5"
                   style={{ fontFamily: "var(--font-poppins)" }}
                 >
                   {member.name}
                 </h3>
                 <p className="text-sm text-[#00a67d] font-medium mb-2">{member.role}</p>
-                <p className="text-sm text-[#666666] leading-relaxed">{member.description}</p>
+                <p className="text-sm text-[#555770] leading-relaxed">{member.description}</p>
               </div>
             ))}
           </div>
@@ -184,15 +184,15 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Ready to Create Something Amazing?
           </h2>
-          <p className="text-[#666666] mb-6 max-w-lg mx-auto">
+          <p className="text-[#555770] mb-6 max-w-lg mx-auto">
             Browse our collection of professionally designed Canva templates and find the perfect starting point for your next project.
           </p>
           <Link

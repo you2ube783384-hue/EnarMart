@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faBars, faXmark, faChevronLeft, faChevronRight, faShop, faChevronDown } from "@fortawesome/free-solid-svg-icons"
+import { faMagnifyingGlass, faBars, faXmark, faChevronDown, faShop } from "@fortawesome/free-solid-svg-icons"
 import { getIconDefinition } from "@/lib/icon-helpers"
 import { Input } from "@/components/ui/input"
 
@@ -31,10 +31,7 @@ export function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchOverlayRef = useRef<HTMLDivElement>(null)
-  const subNavScrollRef = useRef<HTMLDivElement>(null)
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -54,38 +51,6 @@ export function Header() {
     }
     fetchCategories()
   }, [])
-
-  // Check scroll position for arrows
-  const checkScroll = useCallback(() => {
-    const el = subNavScrollRef.current
-    if (!el) return
-    setCanScrollLeft(el.scrollLeft > 0)
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1)
-  }, [])
-
-  useEffect(() => {
-    checkScroll()
-    const el = subNavScrollRef.current
-    if (el) {
-      el.addEventListener("scroll", checkScroll, { passive: true })
-      window.addEventListener("resize", checkScroll)
-      return () => {
-        el.removeEventListener("scroll", checkScroll)
-        window.removeEventListener("resize", checkScroll)
-      }
-    }
-  }, [checkScroll, navCategories])
-
-  useEffect(() => {
-    const timer = setTimeout(checkScroll, 100)
-    return () => clearTimeout(timer)
-  }, [navCategories, checkScroll])
-
-  const scrollSubNav = (direction: "left" | "right") => {
-    const el = subNavScrollRef.current
-    if (!el) return
-    el.scrollBy({ left: direction === "left" ? -200 : 200, behavior: "smooth" })
-  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -130,7 +95,7 @@ export function Header() {
   const handleDropdownLeave = () => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null)
-    }, 200)
+    }, 250)
   }
 
   // Close dropdown when clicking outside
@@ -139,8 +104,6 @@ export function Header() {
       setActiveDropdown(null)
     }
     if (activeDropdown) {
-      // Only add listener when dropdown is open
-      // Small delay so the click that opened it doesn't close it
       const timer = setTimeout(() => {
         document.addEventListener("click", handleClickOutside)
       }, 0)
@@ -152,19 +115,19 @@ export function Header() {
   }, [activeDropdown])
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white">
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md">
       {/* Search overlay - closes on click on empty space */}
       {searchExpanded && (
         <div
           ref={searchOverlayRef}
-          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
           onClick={handleOverlayClick}
         />
       )}
 
       {/* Main nav bar */}
-      <div className="relative z-50 border-b border-[#e5e5e5]">
-        <div className="max-w-7xl mx-auto flex h-14 items-center gap-6 px-4 lg:px-8">
+      <div className="relative z-50 border-b border-[#e8e8ed]">
+        <div className="max-w-[1320px] mx-auto flex h-16 items-center gap-8 px-6 lg:px-10">
           {/* Logo */}
           <Link
             href="/"
@@ -175,9 +138,9 @@ export function Header() {
             <Image
               src="/logo.png"
               alt="EnarMart"
-              width={140}
-              height={36}
-              className="h-8 w-auto"
+              width={150}
+              height={40}
+              className="h-9 w-auto"
               priority
             />
           </Link>
@@ -186,19 +149,19 @@ export function Header() {
           <form
             onSubmit={handleSearch}
             className={`flex items-center gap-2 transition-all duration-300 ${
-              searchExpanded ? "flex-1" : "flex-1 max-w-lg"
+              searchExpanded ? "flex-1" : "flex-1 max-w-xl"
             }`}
           >
             <div className="relative w-full">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#999999] text-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8e8ea0] text-sm"
               />
               <Input
                 ref={searchInputRef}
                 type="search"
                 placeholder="Search Canva templates..."
-                className={`pl-10 h-10 bg-[#f5f5f5] border-[#e5e5e5] rounded-full text-sm placeholder:text-[#999999] focus:bg-white focus:border-[#00a67d] focus:ring-[#00a67d]/20 transition-all duration-300 ${
+                className={`pl-11 h-11 bg-[#f5f5f7] border-transparent rounded-xl text-sm placeholder:text-[#8e8ea0] focus:bg-white focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/15 transition-all duration-300 ${
                   searchExpanded ? "w-full pr-10 text-base" : ""
                 }`}
                 value={searchQuery}
@@ -209,7 +172,7 @@ export function Header() {
               {searchExpanded && (
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-[#e5e5e5] hover:bg-[#d5d5d5] text-[#666666] hover:text-[#333333] transition-all duration-200 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-[#e8e8ed] hover:bg-[#d8d8dd] text-[#555770] hover:text-[#1a1a2e] transition-all duration-200 cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation()
                     setSearchExpanded(false)
@@ -231,13 +194,13 @@ export function Header() {
           >
             <Link
               href="/shop"
-              className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-md transition-colors flex items-center gap-1.5 ${
+              className={`px-4 py-2 text-[13px] font-semibold tracking-wide rounded-lg transition-all duration-200 flex items-center gap-2 ${
                 pathname === "/shop"
                   ? "text-[#00a67d] bg-[#e6f7f2]"
-                  : "text-[#666666] hover:text-[#333333] hover:bg-[#f5f5f5]"
+                  : "text-[#555770] hover:text-[#1a1a2e] hover:bg-[#f5f5f7]"
               }`}
             >
-              <FontAwesomeIcon icon={faShop} className="text-[0.6rem]" />
+              <FontAwesomeIcon icon={faShop} className="text-[0.65rem]" />
               Shop
             </Link>
             {navCategories.map((category) => (
@@ -249,21 +212,18 @@ export function Header() {
               >
                 <Link
                   href={`/shop?category=${encodeURIComponent(category.name)}`}
-                  className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                  className={`px-4 py-2 text-[13px] font-semibold tracking-wide rounded-lg transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                     activeDropdown === category.id
                       ? "text-[#00a67d] bg-[#e6f7f2]"
-                      : "text-[#666666] hover:text-[#333333] hover:bg-[#f5f5f5]"
+                      : "text-[#555770] hover:text-[#1a1a2e] hover:bg-[#f5f5f7]"
                   }`}
-                  onClick={(e) => {
-                    // If clicking the category link itself, navigate
-                    setActiveDropdown(null)
-                  }}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   {category.name}
                   {category.subcategories && category.subcategories.length > 0 && (
                     <FontAwesomeIcon
                       icon={faChevronDown}
-                      className={`text-[0.5rem] transition-transform duration-200 ${
+                      className={`text-[0.45rem] ml-0.5 transition-transform duration-200 ${
                         activeDropdown === category.id ? "rotate-180" : ""
                       }`}
                     />
@@ -273,31 +233,34 @@ export function Header() {
                 {/* Dropdown with subcategories */}
                 {category.subcategories && category.subcategories.length > 0 && activeDropdown === category.id && (
                   <div
-                    className="absolute top-full left-0 mt-0 min-w-[220px] bg-white rounded-lg shadow-xl border border-[#e5e5e5] py-2 z-[60] animate-in fade-in-0 slide-in-from-top-1 duration-150"
+                    className="absolute top-full left-0 pt-2 min-w-[260px] z-[60] dropdown-enter"
                     onMouseEnter={() => handleDropdownEnter(category.id)}
                     onMouseLeave={handleDropdownLeave}
                   >
-                    {/* Category header link */}
-                    <Link
-                      href={`/shop?category=${encodeURIComponent(category.name)}`}
-                      className="flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#00a67d] hover:bg-[#e6f7f2] transition-colors"
-                      onClick={() => setActiveDropdown(null)}
-                    >
-                      <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.6rem]" />
-                      All {category.name}
-                    </Link>
-                    <div className="mx-3 border-t border-[#e5e5e5]" />
-                    {/* Subcategory links */}
-                    {category.subcategories.map((sub) => (
+                    <div className="bg-white rounded-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] border border-[#e8e8ed] overflow-hidden">
+                      {/* Category header link */}
                       <Link
-                        key={sub.id}
-                        href={`/shop?category=${encodeURIComponent(category.name)}&subcategory=${encodeURIComponent(sub.name)}`}
-                        className="block px-4 py-2 text-sm text-[#555555] hover:text-[#00a67d] hover:bg-[#e6f7f2]/60 transition-colors cursor-pointer"
+                        href={`/shop?category=${encodeURIComponent(category.name)}`}
+                        className="flex items-center gap-3 px-5 py-3.5 text-[13px] font-bold tracking-wide text-[#00a67d] hover:bg-[#f0fdf9] transition-colors border-b border-[#f0f0f3]"
                         onClick={() => setActiveDropdown(null)}
                       >
-                        {sub.name}
+                        <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.7rem]" />
+                        All {category.name}
                       </Link>
-                    ))}
+                      {/* Subcategory links */}
+                      <div className="py-2">
+                        {category.subcategories.map((sub) => (
+                          <Link
+                            key={sub.id}
+                            href={`/shop?category=${encodeURIComponent(category.name)}&subcategory=${encodeURIComponent(sub.name)}`}
+                            className="block px-5 py-2.5 text-sm text-[#555770] hover:text-[#00a67d] hover:bg-[#f0fdf9] hover:pl-6 transition-all duration-200 cursor-pointer"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -306,7 +269,7 @@ export function Header() {
 
           {/* Mobile menu toggle */}
           <button
-            className={`lg:hidden p-2 text-[#666666] hover:text-[#333333] transition-colors ${
+            className={`lg:hidden p-2.5 text-[#555770] hover:text-[#1a1a2e] rounded-lg hover:bg-[#f5f5f7] transition-all ${
               searchExpanded ? "opacity-0 w-0 overflow-hidden pointer-events-none" : "opacity-100 w-auto"
             }`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -316,66 +279,14 @@ export function Header() {
         </div>
       </div>
 
-      {/* Category sub-nav bar with scroll arrows */}
-      {navCategories.length > 0 && (
-        <div className="hidden lg:block border-b border-[#e5e5e5] bg-[#fafafa]">
-          <div className="max-w-7xl mx-auto px-4 lg:px-8 relative">
-            {canScrollLeft && (
-              <button
-                className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#fafafa] to-transparent z-10 flex items-center justify-start pl-1 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer"
-                onClick={() => scrollSubNav("left")}
-              >
-                <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-              </button>
-            )}
-
-            <div
-              ref={subNavScrollRef}
-              className="flex items-center gap-6 overflow-x-auto py-2.5 text-sm scrollbar-none"
-            >
-              <Link
-                href="/shop"
-                className="shrink-0 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider"
-              >
-                All Templates
-              </Link>
-              <span className="shrink-0 text-[#e5e5e5]">|</span>
-              {navCategories.map((category, idx) => (
-                <React.Fragment key={category.id}>
-                  <Link
-                    href={`/shop?category=${encodeURIComponent(category.name)}`}
-                    className={`shrink-0 transition-colors cursor-pointer text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 text-[#999999] hover:text-[#00a67d]`}
-                  >
-                    <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.6rem]" />
-                    {category.name}
-                  </Link>
-                  {idx < navCategories.length - 1 && (
-                    <span className="shrink-0 text-[#e5e5e5]">|</span>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-
-            {canScrollRight && (
-              <button
-                className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#fafafa] to-transparent z-10 flex items-center justify-end pr-1 text-[#999999] hover:text-[#00a67d] transition-colors cursor-pointer"
-                onClick={() => scrollSubNav("right")}
-              >
-                <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Mobile menu with expandable categories */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-[#e5e5e5] bg-white shadow-sm max-h-[80vh] overflow-y-auto">
-          <div className="p-4 space-y-2">
+        <div className="lg:hidden border-b border-[#e8e8ed] bg-white shadow-[0_8px_30px_-12px_rgba(0,0,0,0.1)] max-h-[80vh] overflow-y-auto">
+          <div className="p-5 space-y-2">
             {/* Shop All */}
             <Link
               href="/shop"
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg bg-[#00a67d] text-white"
+              className="flex items-center gap-3 px-5 py-3.5 text-sm font-bold tracking-wide rounded-xl bg-[#00a67d] text-white shadow-md shadow-[#00a67d]/20"
               onClick={() => setMobileMenuOpen(false)}
             >
               <FontAwesomeIcon icon={faShop} className="text-xs" />
@@ -404,18 +315,18 @@ function MobileCategoryItem({ category, onClose }: { category: NavCategory; onCl
 
   return (
     <div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-1">
         <Link
           href={`/shop?category=${encodeURIComponent(category.name)}`}
-          className="flex-1 flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider rounded-lg text-[#666666] bg-[#f5f5f5] hover:bg-[#e5e5e5]"
+          className="flex-1 flex items-center gap-3 px-5 py-3 text-[13px] font-semibold tracking-wide rounded-xl text-[#555770] bg-[#f5f5f7] hover:bg-[#e8e8ed] transition-colors"
           onClick={onClose}
         >
-          <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.6rem]" />
+          <FontAwesomeIcon icon={getIconDefinition(category.icon)} className="text-[0.65rem] text-[#00a67d]" />
           {category.name}
         </Link>
         {hasSubcategories && (
           <button
-            className="ml-1 p-2.5 rounded-lg text-[#999999] hover:text-[#00a67d] hover:bg-[#e6f7f2] transition-colors cursor-pointer"
+            className="p-3 rounded-xl text-[#8e8ea0] hover:text-[#00a67d] hover:bg-[#e6f7f2] transition-all cursor-pointer"
             onClick={() => setExpanded(!expanded)}
           >
             <FontAwesomeIcon
@@ -428,10 +339,10 @@ function MobileCategoryItem({ category, onClose }: { category: NavCategory; onCl
 
       {/* Subcategories dropdown */}
       {hasSubcategories && expanded && (
-        <div className="ml-4 mt-1 space-y-0.5 border-l-2 border-[#e6f7f2] pl-3 py-1">
+        <div className="ml-4 mt-1.5 space-y-0.5 border-l-2 border-[#e6f7f2] pl-4 py-1.5">
           <Link
             href={`/shop?category=${encodeURIComponent(category.name)}`}
-            className="block px-3 py-2 text-xs font-medium text-[#00a67d] hover:bg-[#e6f7f2] rounded-md transition-colors"
+            className="block px-4 py-2.5 text-sm font-medium text-[#00a67d] hover:bg-[#f0fdf9] rounded-lg transition-colors"
             onClick={onClose}
           >
             All {category.name}
@@ -440,7 +351,7 @@ function MobileCategoryItem({ category, onClose }: { category: NavCategory; onCl
             <Link
               key={sub.id}
               href={`/shop?category=${encodeURIComponent(category.name)}&subcategory=${encodeURIComponent(sub.name)}`}
-              className="block px-3 py-2 text-xs text-[#666666] hover:text-[#00a67d] hover:bg-[#e6f7f2]/60 rounded-md transition-colors"
+              className="block px-4 py-2.5 text-sm text-[#555770] hover:text-[#00a67d] hover:bg-[#f0fdf9] rounded-lg transition-colors"
               onClick={onClose}
             >
               {sub.name}

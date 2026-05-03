@@ -11,9 +11,6 @@ import {
   faVideo,
   faLayerGroup,
   faGraduationCap,
-  faHeart,
-  faChartLine,
-  faCrown,
   faEnvelope,
   faArrowRight,
   faShop,
@@ -50,26 +47,29 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-[#2c2c2c] text-white mt-auto">
+    <footer className="bg-[#1a1a2e] text-white mt-auto">
       {/* Newsletter Section */}
-      <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 md:py-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "var(--font-poppins)" }}>
+      <div className="border-b border-white/5">
+        <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-14 md:py-16">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left">
+              <h3
+                className="text-xl font-bold mb-2 tracking-tight"
+                style={{ fontFamily: "var(--font-poppins)" }}
+              >
                 Stay in the loop
               </h3>
-              <p className="text-sm text-white/50">
-                Get new Canva templates, deals, and creative inspiration delivered to your inbox.
+              <p className="text-sm text-white/40 max-w-md leading-relaxed">
+                Get new Canva templates, exclusive deals, and creative inspiration delivered straight to your inbox.
               </p>
             </div>
-            <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <input
                 type="email"
                 placeholder="Your email address"
-                className="flex-1 md:w-64 h-10 bg-white/10 border border-white/10 rounded-full px-4 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#00a67d] focus:ring-1 focus:ring-[#00a67d]"
+                className="flex-1 md:w-72 h-12 bg-white/5 border border-white/10 rounded-xl px-5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#00a67d]/50 focus:ring-2 focus:ring-[#00a67d]/15 transition-all"
               />
-              <button className="h-10 px-5 bg-[#00a67d] hover:bg-[#008f6b] text-white text-sm font-semibold rounded-full transition-colors flex items-center gap-1.5 shrink-0">
+              <button className="h-12 px-6 bg-[#00a67d] hover:bg-[#008f6b] text-white text-sm font-bold rounded-xl transition-all duration-300 flex items-center gap-2 shrink-0 shadow-lg shadow-[#00a67d]/20 hover:shadow-xl hover:shadow-[#00a67d]/30">
                 Subscribe
                 <FontAwesomeIcon icon={faArrowRight} className="text-[0.6rem]" />
               </button>
@@ -79,39 +79,42 @@ export function Footer() {
       </div>
 
       {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 md:py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
+            <Link href="/" className="inline-block mb-5">
               <Image
                 src="/logo.png"
                 alt="EnarMart"
                 width={160}
                 height={40}
-                className="h-9 w-auto"
+                className="h-10 w-auto"
               />
             </Link>
-            <p className="text-sm text-white/40 max-w-sm mb-5 leading-relaxed">
+            <p className="text-sm text-white/35 max-w-sm mb-6 leading-relaxed">
               The marketplace for premium Canva templates. Beautiful, ready-to-edit designs for resumes, social media, YouTube, and more.
             </p>
-            <div className="flex items-center gap-2">
-              <a href="#" className="size-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <FontAwesomeIcon icon={faEnvelope} className="text-xs text-white/60" />
+            <div className="flex items-center gap-3">
+              <a href="#" className="size-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-200 hover:scale-110">
+                <FontAwesomeIcon icon={faEnvelope} className="text-sm text-white/50" />
               </a>
             </div>
           </div>
 
           {/* Categories */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
+            <h3
+              className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/50 mb-5"
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
               Categories
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {footerLinks.categories.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="flex items-center gap-2 text-sm text-white/35 hover:text-white/70 transition-colors">
-                    <FontAwesomeIcon icon={link.icon} className="text-[0.6rem] w-3" />
+                  <Link href={link.href} className="flex items-center gap-2.5 text-sm text-white/30 hover:text-white/70 transition-colors duration-200">
+                    <FontAwesomeIcon icon={link.icon} className="text-[0.6rem] w-3 text-[#00a67d]/60" />
                     {link.name}
                   </Link>
                 </li>
@@ -121,13 +124,16 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
+            <h3
+              className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/50 mb-5"
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
               Company
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
+                  <Link href={link.href} className="text-sm text-white/30 hover:text-white/70 transition-colors duration-200">
                     {link.name}
                   </Link>
                 </li>
@@ -137,13 +143,16 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-4" style={{ fontFamily: "var(--font-poppins)" }}>
+            <h3
+              className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/50 mb-5"
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
               Legal
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-white/35 hover:text-white/70 transition-colors">
+                  <Link href={link.href} className="text-sm text-white/30 hover:text-white/70 transition-colors duration-200">
                     {link.name}
                   </Link>
                 </li>
@@ -155,14 +164,14 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/25">
+        <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/20">
             &copy; {new Date().getFullYear()} EnarMart. All rights reserved.
           </p>
-          <div className="flex items-center gap-5">
-            <Link href="/privacy" className="text-xs text-white/25 hover:text-white/40 transition-colors">Privacy</Link>
-            <Link href="/terms" className="text-xs text-white/25 hover:text-white/40 transition-colors">Terms</Link>
-            <Link href="/shop" className="text-xs text-white/25 hover:text-white/40 transition-colors flex items-center gap-1">
+          <div className="flex items-center gap-6">
+            <Link href="/privacy" className="text-xs text-white/20 hover:text-white/40 transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-xs text-white/20 hover:text-white/40 transition-colors">Terms</Link>
+            <Link href="/shop" className="text-xs text-white/20 hover:text-white/40 transition-colors flex items-center gap-1.5">
               <FontAwesomeIcon icon={faShop} className="text-[0.5rem]" />
               Shop
             </Link>

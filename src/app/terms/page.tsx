@@ -10,29 +10,29 @@ export default function TermsOfServicePage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#f8f5f2] py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h1
-            className="text-3xl md:text-4xl font-bold text-[#333333] mb-4"
+            className="text-3xl md:text-4xl font-bold tracking-tight text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Terms of Service
           </h1>
-          <p className="text-[#666666] text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-[#555770] text-base md:text-lg max-w-2xl mx-auto">
             Please read these terms carefully before using EnarMart. By accessing our site or purchasing templates, you agree to these terms.
           </p>
-          <p className="text-sm text-[#999999] mt-4">Last updated: March 4, 2026</p>
+          <p className="text-sm text-[#8e8ea0] mt-4">Last updated: March 4, 2026</p>
         </div>
       </section>
 
       {/* Content Section */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
-          <div className="space-y-10 text-[#666666] leading-relaxed">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
+          <div className="space-y-10 text-[#555770] leading-relaxed">
             {/* Acceptance */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 1. Acceptance of Terms
@@ -48,7 +48,7 @@ export default function TermsOfServicePage() {
             {/* Description of Services */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 2. Description of Services
@@ -71,7 +71,7 @@ export default function TermsOfServicePage() {
             {/* User Accounts */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 3. User Accounts
@@ -94,7 +94,7 @@ export default function TermsOfServicePage() {
             {/* Purchases and Payments */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 4. Purchases and Payments
@@ -103,18 +103,18 @@ export default function TermsOfServicePage() {
                 By purchasing a template on EnarMart, you agree to the following:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li><strong className="text-[#333333]">Pricing:</strong> All prices are listed in USD and are subject to change without notice. Promotional pricing is valid only during the specified promotional period.</li>
-                <li><strong className="text-[#333333]">Payment:</strong> Payment is processed securely through our third-party payment providers at the time of purchase. We accept major credit cards, debit cards, and other payment methods as available.</li>
-                <li><strong className="text-[#333333]">Digital Delivery:</strong> Upon successful payment, you will receive immediate access to download your template. Download links are also available in your account dashboard.</li>
-                <li><strong className="text-[#333333]">Sales Tax:</strong> Applicable sales tax will be added to your purchase based on your billing location, as required by law.</li>
-                <li><strong className="text-[#333333]">Price Errors:</strong> In the event of a pricing error, we reserve the right to cancel any orders placed at the incorrect price and issue a full refund.</li>
+                <li><strong className="text-[#1a1a2e]">Pricing:</strong> All prices are listed in USD and are subject to change without notice. Promotional pricing is valid only during the specified promotional period.</li>
+                <li><strong className="text-[#1a1a2e]">Payment:</strong> Payment is processed securely through our third-party payment providers at the time of purchase. We accept major credit cards, debit cards, and other payment methods as available.</li>
+                <li><strong className="text-[#1a1a2e]">Digital Delivery:</strong> Upon successful payment, you will receive immediate access to download your template. Download links are also available in your account dashboard.</li>
+                <li><strong className="text-[#1a1a2e]">Sales Tax:</strong> Applicable sales tax will be added to your purchase based on your billing location, as required by law.</li>
+                <li><strong className="text-[#1a1a2e]">Price Errors:</strong> In the event of a pricing error, we reserve the right to cancel any orders placed at the incorrect price and issue a full refund.</li>
               </ul>
             </div>
 
             {/* Intellectual Property */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 5. Intellectual Property
@@ -135,7 +135,7 @@ export default function TermsOfServicePage() {
             {/* Prohibited Conduct */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 6. Prohibited Conduct
@@ -156,7 +156,7 @@ export default function TermsOfServicePage() {
             {/* Disclaimer of Warranties */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 7. Disclaimer of Warranties
@@ -179,7 +179,7 @@ export default function TermsOfServicePage() {
             {/* Limitation of Liability */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 8. Limitation of Liability
@@ -195,7 +195,7 @@ export default function TermsOfServicePage() {
             {/* Indemnification */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 9. Indemnification
@@ -208,7 +208,7 @@ export default function TermsOfServicePage() {
             {/* Termination */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 10. Termination
@@ -224,7 +224,7 @@ export default function TermsOfServicePage() {
             {/* Governing Law */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 11. Governing Law
@@ -237,7 +237,7 @@ export default function TermsOfServicePage() {
             {/* Contact */}
             <div>
               <h2
-                className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+                className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
                 style={{ fontFamily: "var(--font-poppins)" }}
               >
                 12. Contact Us
@@ -245,8 +245,8 @@ export default function TermsOfServicePage() {
               <p>
                 If you have any questions about these Terms of Service, please contact us:
               </p>
-              <div className="mt-4 p-6 bg-[#f8f5f2] rounded-lg">
-                <p className="text-[#333333] font-semibold mb-2">EnarMart Legal Team</p>
+              <div className="mt-4 p-6 bg-[#f5f5f7] rounded-xl">
+                <p className="text-[#1a1a2e] font-semibold mb-2">EnarMart Legal Team</p>
                 <p>Email: <a href="mailto:legal@enarmart.com" className="text-[#00a67d] hover:underline">legal@enarmart.com</a></p>
                 <p>Website: <a href="https://enarmart.com" className="text-[#00a67d] hover:underline">enarmart.com</a></p>
               </div>

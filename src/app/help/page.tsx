@@ -95,21 +95,21 @@ export default function HelpPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#f8f5f2] py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h1
-            className="text-3xl md:text-4xl font-bold text-[#333333] mb-4"
+            className="text-3xl md:text-4xl font-bold tracking-tight text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Help Center
           </h1>
-          <p className="text-[#666666] text-base md:text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-[#555770] text-base md:text-lg max-w-2xl mx-auto mb-8">
             Find answers to common questions, step-by-step guides, and everything you need to get the most out of your EnarMart templates.
           </p>
           {/* Search */}
           <div className="max-w-lg mx-auto relative">
             <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999999]"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8e8ea0]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -121,17 +121,17 @@ export default function HelpPage() {
               placeholder="Search help articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 pl-12 pr-4 bg-white border border-[#e5e5e5] rounded-full text-sm placeholder:text-[#999999] focus:outline-none focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/20 transition-all"
+              className="w-full h-12 pl-12 pr-4 bg-white border border-[#e8e8ed] rounded-full text-sm placeholder:text-[#8e8ea0] focus:outline-none focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/20 transition-all"
             />
           </div>
         </div>
       </section>
 
       {/* Popular Articles */}
-      <section className="py-8 md:py-10 border-b border-[#e5e5e5]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-8 md:py-10 border-b border-[#e8e8ed]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <h2
-            className="text-sm font-semibold uppercase tracking-wider text-[#999999] mb-4"
+            className="text-sm font-semibold uppercase tracking-wider text-[#8e8ea0] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Popular Articles
@@ -140,7 +140,7 @@ export default function HelpPage() {
             {popularArticles.map((article) => (
               <span
                 key={article}
-                className="px-4 py-2 text-sm bg-[#f8f5f2] text-[#333333] rounded-full hover:bg-[#00a67d]/10 hover:text-[#00a67d] transition-colors cursor-pointer"
+                className="px-4 py-2 text-sm bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] text-[#1a1a2e] rounded-full hover:bg-[#00a67d]/10 hover:text-[#00a67d] transition-colors cursor-pointer"
               >
                 {article}
               </span>
@@ -150,10 +150,10 @@ export default function HelpPage() {
       </section>
 
       {/* Help Categories */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-8"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-8"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Browse by Category
@@ -163,7 +163,7 @@ export default function HelpPage() {
             {filteredCategories.map((category) => (
               <div
                 key={category.title}
-                className="border border-[#e5e5e5] rounded-xl overflow-hidden"
+                className="border border-[#e8e8ed] rounded-xl overflow-hidden"
               >
                 <button
                   onClick={() =>
@@ -175,15 +175,15 @@ export default function HelpPage() {
                 >
                   <div>
                     <h3
-                      className="text-base font-semibold text-[#333333]"
+                      className="text-base font-semibold text-[#1a1a2e]"
                       style={{ fontFamily: "var(--font-poppins)" }}
                     >
                       {category.title}
                     </h3>
-                    <p className="text-sm text-[#666666] mt-1">{category.description}</p>
+                    <p className="text-sm text-[#555770] mt-1">{category.description}</p>
                   </div>
                   <svg
-                    className={`w-5 h-5 text-[#999999] shrink-0 ml-4 transition-transform duration-200 ${
+                    className={`w-5 h-5 text-[#8e8ea0] shrink-0 ml-4 transition-transform duration-200 ${
                       expandedCategory === category.title ? "rotate-180" : ""
                     }`}
                     fill="none"
@@ -195,13 +195,13 @@ export default function HelpPage() {
                 </button>
 
                 {expandedCategory === category.title && (
-                  <div className="px-5 pb-5 border-t border-[#e5e5e5]">
+                  <div className="px-5 pb-5 border-t border-[#e8e8ed]">
                     <ul className="space-y-2 pt-4">
                       {category.articles.map((article) => (
                         <li key={article.slug}>
                           <a
                             href="#"
-                            className="flex items-center gap-2 text-sm text-[#666666] hover:text-[#00a67d] transition-colors group"
+                            className="flex items-center gap-2 text-sm text-[#555770] hover:text-[#00a67d] transition-colors group"
                           >
                             <svg
                               className="w-4 h-4 text-[#ccc] group-hover:text-[#00a67d] transition-colors shrink-0"
@@ -224,23 +224,23 @@ export default function HelpPage() {
 
           {filteredCategories.length === 0 && searchQuery.trim() && (
             <div className="text-center py-12">
-              <p className="text-[#666666] mb-2">No articles found for &quot;{searchQuery}&quot;</p>
-              <p className="text-sm text-[#999999]">Try a different search term or <a href="/contact" className="text-[#00a67d] hover:underline">contact our support team</a>.</p>
+              <p className="text-[#555770] mb-2">No articles found for &quot;{searchQuery}&quot;</p>
+              <p className="text-sm text-[#8e8ea0]">Try a different search term or <a href="/contact" className="text-[#00a67d] hover:underline">contact our support team</a>.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* Still Need Help */}
-      <section className="py-12 md:py-16 bg-[#f8f5f2]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="py-14 md:py-20 bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Still Need Help?
           </h2>
-          <p className="text-[#666666] mb-6 max-w-lg mx-auto">
+          <p className="text-[#555770] mb-6 max-w-lg mx-auto">
             Can&apos;t find what you&apos;re looking for? Our support team is here to assist you with any questions or issues.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -252,7 +252,7 @@ export default function HelpPage() {
             </Link>
             <Link
               href="/faq"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-[#e5e5e5] hover:border-[#00a67d]/30 text-[#333333] font-semibold rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-[#e8e8ed] hover:border-[#00a67d]/30 text-[#1a1a2e] font-semibold rounded-full transition-colors"
             >
               View FAQ
             </Link>

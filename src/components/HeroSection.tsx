@@ -101,31 +101,47 @@ export function HeroSection() {
   return (
     <section>
       {/* Hero Banner */}
-      <div className="bg-[#f8f5f2]">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 md:py-16 lg:py-20">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2]">
+        {/* Decorative circles */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00a67d]/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#00a67d]/5 rounded-full translate-y-1/2 -translate-x-1/4" />
+
+        <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-16 md:py-24 lg:py-28 relative">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#00a67d] mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00a67d]/10 text-[#00a67d] text-xs font-semibold tracking-wider uppercase mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00a67d] animate-pulse" />
               Premium Canva Templates
-            </p>
+            </div>
             <h1
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#333333] mb-5 leading-[1.15] tracking-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1a1a2e] mb-6 leading-[1.1] tracking-tight"
               style={{ fontFamily: "var(--font-poppins)" }}
             >
-              Beautiful Canva Templates
+              Beautiful Canva
               <br />
-              for Every Project
+              Templates for
+              <br />
+              <span className="text-[#00a67d]">Every Project</span>
             </h1>
-            <p className="text-sm md:text-base text-[#666666] mb-8 max-w-lg leading-relaxed">
+            <p className="text-base md:text-lg text-[#555770] mb-10 max-w-lg leading-relaxed">
               Ready-to-use Canva templates for resumes, social media, YouTube, presentations, and more. Edit in minutes, download instantly.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/shop">
                 <Button
                   size="lg"
-                  className="bg-[#00a67d] text-white hover:bg-[#008f6b] border-0 px-7 rounded-full h-11 text-sm font-semibold"
+                  className="bg-[#00a67d] text-white hover:bg-[#008f6b] border-0 px-8 rounded-xl h-12 text-sm font-bold tracking-wide shadow-lg shadow-[#00a67d]/25 hover:shadow-xl hover:shadow-[#00a67d]/30 transition-all duration-300"
                 >
                   Explore Templates
-                  <FontAwesomeIcon icon={faArrowRight} className="ml-2 text-xs" />
+                  <FontAwesomeIcon icon={faArrowRight} className="ml-2.5 text-xs" />
+                </Button>
+              </Link>
+              <Link href="/shop?category=Most+Purchased">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-[#e8e8ed] text-[#555770] hover:text-[#1a1a2e] hover:bg-white hover:border-[#d8d8dd] px-8 rounded-xl h-12 text-sm font-bold tracking-wide transition-all duration-300"
+                >
+                  Most Popular
                 </Button>
               </Link>
             </div>
@@ -134,11 +150,23 @@ export function HeroSection() {
       </div>
 
       {/* Category Cards with scroll */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 mt-4 pb-10">
+      <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-10 md:py-14">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2
+              className="text-lg md:text-xl font-bold text-[#1a1a2e] tracking-tight"
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
+              Browse by Category
+            </h2>
+            <p className="text-sm text-[#8e8ea0] mt-0.5">Find the perfect template for your needs</p>
+          </div>
+        </div>
+
         <div className="relative">
           {canScrollLeft && (
             <button
-              className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 size-10 rounded-full bg-white shadow-lg border border-[#e0e0e0] flex items-center justify-center text-[#666666] hover:text-[#00a67d] hover:border-[#00a67d]/40 transition-all cursor-pointer"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 size-11 rounded-full bg-white shadow-lg border border-[#e8e8ed] flex items-center justify-center text-[#555770] hover:text-[#00a67d] hover:border-[#00a67d]/30 hover:shadow-xl transition-all cursor-pointer"
               onClick={() => scrollCards("left")}
             >
               <FontAwesomeIcon icon={faChevronLeft} className="text-sm" />
@@ -147,21 +175,24 @@ export function HeroSection() {
 
           <div
             ref={scrollRef}
-            className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-2"
+            className="flex gap-4 md:gap-5 overflow-x-auto scrollbar-none scroll-smooth pb-2"
           >
             {heroCategories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/shop?category=${encodeURIComponent(cat.name)}`}
-                className="group bg-white border-[3px] border-[#e0e0e0] rounded-xl p-4 md:p-5 text-center transition-all hover:shadow-md hover:border-[#00a67d]/40 cursor-pointer shrink-0 w-[130px] md:w-[150px] lg:w-auto lg:flex-1"
+                className="group bg-white border border-[#e8e8ed] rounded-2xl p-5 md:p-6 text-center transition-all duration-300 hover:shadow-lg hover:shadow-[#00a67d]/5 hover:border-[#00a67d]/20 cursor-pointer shrink-0 w-[140px] md:w-[160px] lg:w-auto lg:flex-1"
               >
-                <div className="mx-auto mb-2 transition-transform group-hover:scale-110 flex items-center justify-center">
-                  <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[60px] text-[#333333]" />
+                <div className="mx-auto mb-3 w-14 h-14 rounded-xl bg-[#f0fdf9] flex items-center justify-center transition-all duration-300 group-hover:bg-[#e6f7f2] group-hover:scale-110">
+                  <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-2xl text-[#00a67d]" />
                 </div>
-                <h3 className="font-semibold text-xs md:text-sm text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+                <h3
+                  className="font-semibold text-xs md:text-sm text-[#1a1a2e] tracking-tight"
+                  style={{ fontFamily: "var(--font-poppins)" }}
+                >
                   {cat.name}
                 </h3>
-                <p className="text-[10px] md:text-xs text-[#999999] mt-0.5">
+                <p className="text-[11px] text-[#8e8ea0] mt-1 font-medium">
                   {loading ? "..." : getCount(cat.name)}
                 </p>
               </Link>
@@ -170,7 +201,7 @@ export function HeroSection() {
 
           {canScrollRight && (
             <button
-              className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 size-10 rounded-full bg-white shadow-lg border border-[#e0e0e0] flex items-center justify-center text-[#666666] hover:text-[#00a67d] hover:border-[#00a67d]/40 transition-all cursor-pointer"
+              className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 size-11 rounded-full bg-white shadow-lg border border-[#e8e8ed] flex items-center justify-center text-[#555770] hover:text-[#00a67d] hover:border-[#00a67d]/30 hover:shadow-xl transition-all cursor-pointer"
               onClick={() => scrollCards("right")}
             >
               <FontAwesomeIcon icon={faChevronRight} className="text-sm" />
@@ -178,10 +209,10 @@ export function HeroSection() {
           )}
 
           {canScrollLeft && (
-            <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+            <div className="absolute left-0 top-0 bottom-2 w-10 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
           )}
           {canScrollRight && (
-            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
           )}
         </div>
       </div>

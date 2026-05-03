@@ -14,6 +14,7 @@ import {
   faFilter,
   faChevronDown,
   faArrowRight,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
@@ -81,7 +82,6 @@ function ShopContent() {
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
   const [showFilters, setShowFilters] = useState(false)
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(initialCategory ? categories.find(c => c.name === initialCategory)?.id || null : null)
 
   // Get subcategories for selected category
   const currentCategorySubcategories = categories.find(c => c.name === selectedCategory)?.subcategories || []
@@ -132,7 +132,7 @@ function ShopContent() {
   const filteredProducts = React.useMemo(() => {
     let result = [...products]
 
-    // Subcategory filter (search by subcategory name in title or description)
+    // Subcategory filter
     if (selectedSubcategory) {
       result = result.filter((p) =>
         p.title.toLowerCase().includes(selectedSubcategory.toLowerCase()) ||
@@ -190,19 +190,15 @@ function ShopContent() {
     setSortBy("newest")
     setMinPrice("")
     setMaxPrice("")
-    setExpandedCategory(null)
   }
 
   const handleCategorySelect = (catName: string) => {
     if (selectedCategory === catName) {
       setSelectedCategory("")
       setSelectedSubcategory("")
-      setExpandedCategory(null)
     } else {
       setSelectedCategory(catName)
       setSelectedSubcategory("")
-      const cat = categories.find(c => c.name === catName)
-      setExpandedCategory(cat?.id || null)
     }
   }
 
@@ -220,12 +216,15 @@ function ShopContent() {
       <Header />
       <main className="flex-1">
         {/* Page header */}
-        <div className="bg-[#f8f5f2] border-b border-[#e5e5e5]">
-          <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#333333]" style={{ fontFamily: "var(--font-poppins)" }}>
+        <div className="bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] border-b border-[#e8e8ed]">
+          <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-8 md:py-10">
+            <h1
+              className="text-2xl md:text-3xl font-bold tracking-tight text-[#1a1a2e]"
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
               {selectedSubcategory || selectedCategory || "All Templates"}
             </h1>
-            <p className="text-sm text-[#999999] mt-1">
+            <p className="text-sm text-[#8e8ea0] mt-1.5">
               {searchQuery
                 ? `Search results for "${searchQuery}"`
                 : selectedSubcategory
@@ -237,18 +236,18 @@ function ShopContent() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
+        <div className="max-w-[1320px] mx-auto px-6 lg:px-10 py-8 md:py-10">
           {/* Filter bar */}
-          <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col gap-5 mb-8">
             {/* Top row: search + sort + filter toggle */}
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
               {/* Search */}
               <div className="relative flex-1 max-w-md">
-                <FontAwesomeIcon icon={faFilter} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#999999] text-xs" />
+                <FontAwesomeIcon icon={faFilter} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8e8ea0] text-xs" />
                 <Input
                   type="search"
                   placeholder="Search templates..."
-                  className="pl-9 h-9 text-sm bg-[#f5f5f5] border-[#e5e5e5] rounded-lg"
+                  className="pl-10 h-10 text-sm bg-[#f5f5f7] border-transparent rounded-xl focus:bg-white focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/15"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -256,9 +255,9 @@ function ShopContent() {
 
               {/* Sort */}
               <div className="relative">
-                <FontAwesomeIcon icon={faSortAmountDown} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#999999] text-xs" />
+                <FontAwesomeIcon icon={faSortAmountDown} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8e8ea0] text-xs" />
                 <select
-                  className="pl-9 pr-8 h-9 text-sm bg-[#f5f5f5] border border-[#e5e5e5] rounded-lg appearance-none cursor-pointer focus:outline-none focus:border-[#00a67d]"
+                  className="pl-10 pr-9 h-10 text-sm bg-[#f5f5f7] border border-transparent rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/15"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
@@ -266,14 +265,14 @@ function ShopContent() {
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
-                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] text-[0.6rem] pointer-events-none" />
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8e8ea0] text-[0.5rem] pointer-events-none" />
               </div>
 
               {/* Filter toggle (mobile) */}
               <Button
                 variant="outline"
                 size="sm"
-                className="lg:hidden gap-1.5 h-9"
+                className="lg:hidden gap-2 h-10 rounded-xl border-[#e8e8ed]"
                 onClick={() => setShowFilters(!showFilters)}
               >
                 <FontAwesomeIcon icon={faSliders} className="text-xs" />
@@ -290,7 +289,7 @@ function ShopContent() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="gap-1.5 h-9 text-[#999999] hover:text-[#333333]"
+                  className="gap-1.5 h-10 text-[#8e8ea0] hover:text-[#1a1a2e] rounded-xl"
                   onClick={clearFilters}
                 >
                   <FontAwesomeIcon icon={faXmark} className="text-xs" />
@@ -301,51 +300,50 @@ function ShopContent() {
 
             {/* Category + Subcategory + Price filters */}
             <div className={`${showFilters ? "block" : "hidden"} lg:block`}>
-              <div className="flex flex-col lg:flex-row gap-4 lg:items-start">
+              <div className="flex flex-col lg:flex-row gap-6 lg:items-start">
                 {/* Categories with subcategories */}
                 <div className="flex-1">
-                  <p className="text-xs font-medium text-[#999999] uppercase tracking-wider mb-2">Category</p>
+                  <p className="text-[11px] font-bold text-[#8e8ea0] uppercase tracking-[0.15em] mb-3">Category</p>
                   <div className="flex flex-wrap gap-2">
                     <button
-                      className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer ${
+                      className={`px-4 py-2 text-xs font-semibold rounded-xl border transition-all duration-200 cursor-pointer ${
                         !selectedCategory
-                          ? "bg-[#00a67d] text-white border-[#00a67d]"
-                          : "bg-white text-[#666666] border-[#e5e5e5] hover:border-[#00a67d]/40 hover:text-[#00a67d]"
+                          ? "bg-[#00a67d] text-white border-[#00a67d] shadow-md shadow-[#00a67d]/20"
+                          : "bg-white text-[#555770] border-[#e8e8ed] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
                       }`}
-                      onClick={() => { setSelectedCategory(""); setSelectedSubcategory(""); setExpandedCategory(null); }}
+                      onClick={() => { setSelectedCategory(""); setSelectedSubcategory(""); }}
                     >
                       All
                     </button>
                     {categories.map((cat) => (
-                      <div key={cat.id} className="flex flex-wrap items-center gap-1.5">
-                        <button
-                          className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
-                            selectedCategory === cat.name
-                              ? "bg-[#00a67d] text-white border-[#00a67d]"
-                              : "bg-white text-[#666666] border-[#e5e5e5] hover:border-[#00a67d]/40 hover:text-[#00a67d]"
-                          }`}
-                          onClick={() => handleCategorySelect(cat.name)}
-                        >
-                          <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[0.6rem]" />
-                          {cat.name}
-                        </button>
-                      </div>
+                      <button
+                        key={cat.id}
+                        className={`px-4 py-2 text-xs font-semibold rounded-xl border transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                          selectedCategory === cat.name
+                            ? "bg-[#00a67d] text-white border-[#00a67d] shadow-md shadow-[#00a67d]/20"
+                            : "bg-white text-[#555770] border-[#e8e8ed] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                        }`}
+                        onClick={() => handleCategorySelect(cat.name)}
+                      >
+                        <FontAwesomeIcon icon={getIconDefinition(cat.icon)} className="text-[0.6rem]" />
+                        {cat.name}
+                      </button>
                     ))}
                   </div>
 
                   {/* Subcategories for selected category */}
                   {selectedCategory && currentCategorySubcategories.length > 0 && (
-                    <div className="mt-3">
-                      <p className="text-xs font-medium text-[#999999] uppercase tracking-wider mb-2">
-                        <FontAwesomeIcon icon={faChevronDown} className="mr-1 text-[0.5rem]" />
+                    <div className="mt-4">
+                      <p className="text-[11px] font-bold text-[#8e8ea0] uppercase tracking-[0.15em] mb-3">
+                        <FontAwesomeIcon icon={faChevronDown} className="mr-1.5 text-[0.5rem]" />
                         Subcategories
                       </p>
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-2">
                         <button
-                          className={`px-2.5 py-1 text-[11px] font-medium rounded-full border transition-colors cursor-pointer ${
+                          className={`px-3.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all duration-200 cursor-pointer ${
                             !selectedSubcategory
-                              ? "bg-[#00a67d]/10 text-[#00a67d] border-[#00a67d]/30"
-                              : "bg-white text-[#999999] border-[#e5e5e5] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                              ? "bg-[#f0fdf9] text-[#00a67d] border-[#00a67d]/30"
+                              : "bg-white text-[#8e8ea0] border-[#e8e8ed] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
                           }`}
                           onClick={() => setSelectedSubcategory("")}
                         >
@@ -354,10 +352,10 @@ function ShopContent() {
                         {currentCategorySubcategories.map((sub) => (
                           <button
                             key={sub.id}
-                            className={`px-2.5 py-1 text-[11px] font-medium rounded-full border transition-colors cursor-pointer ${
+                            className={`px-3.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all duration-200 cursor-pointer ${
                               selectedSubcategory === sub.name
-                                ? "bg-[#00a67d]/10 text-[#00a67d] border-[#00a67d]/30"
-                                : "bg-white text-[#999999] border-[#e5e5e5] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
+                                ? "bg-[#f0fdf9] text-[#00a67d] border-[#00a67d]/30"
+                                : "bg-white text-[#8e8ea0] border-[#e8e8ed] hover:border-[#00a67d]/30 hover:text-[#00a67d]"
                             }`}
                             onClick={() => setSelectedSubcategory(selectedSubcategory === sub.name ? "" : sub.name)}
                           >
@@ -371,22 +369,22 @@ function ShopContent() {
 
                 {/* Price range */}
                 <div className="shrink-0">
-                  <p className="text-xs font-medium text-[#999999] uppercase tracking-wider mb-2">Price Range</p>
-                  <div className="flex items-center gap-2">
+                  <p className="text-[11px] font-bold text-[#8e8ea0] uppercase tracking-[0.15em] mb-3">Price Range</p>
+                  <div className="flex items-center gap-2.5">
                     <Input
                       type="number"
                       placeholder="Min"
-                      className="w-20 h-8 text-sm bg-[#f5f5f5] border-[#e5e5e5] rounded-lg"
+                      className="w-24 h-9 text-sm bg-[#f5f5f7] border-transparent rounded-lg focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/15"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
                       min="0"
                       step="0.01"
                     />
-                    <span className="text-xs text-[#999999]">—</span>
+                    <span className="text-xs text-[#8e8ea0] font-medium">—</span>
                     <Input
                       type="number"
                       placeholder="Max"
-                      className="w-20 h-8 text-sm bg-[#f5f5f5] border-[#e5e5e5] rounded-lg"
+                      className="w-24 h-9 text-sm bg-[#f5f5f7] border-transparent rounded-lg focus:border-[#00a67d] focus:ring-2 focus:ring-[#00a67d]/15"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
                       min="0"
@@ -399,12 +397,12 @@ function ShopContent() {
           </div>
 
           {/* Results count */}
-          <div className="flex items-center gap-3 mb-5">
-            <Badge className="text-xs bg-[#e6f7f2] text-[#00a67d] border-0 font-medium px-3 py-1 rounded-full">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge className="text-xs bg-[#f0fdf9] text-[#00a67d] border border-[#e6f7f2] font-semibold px-3.5 py-1.5 rounded-full">
               {filteredProducts.length} template{filteredProducts.length !== 1 ? "s" : ""}
             </Badge>
             {selectedSubcategory && (
-              <Badge className="text-xs bg-[#fff8e1] text-[#e67e22] border-0 font-medium px-3 py-1 rounded-full">
+              <Badge className="text-xs bg-[#fff8e1] text-[#e67e22] border border-[#f5edda] font-semibold px-3.5 py-1.5 rounded-full">
                 {selectedSubcategory}
               </Badge>
             )}
@@ -412,33 +410,36 @@ function ShopContent() {
 
           {/* Product grid */}
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="rounded-xl overflow-hidden">
-                  <Skeleton className="aspect-[4/5] w-full rounded-xl" />
-                  <div className="pt-2.5 space-y-1.5">
-                    <Skeleton className="h-3.5 w-4/5" />
-                    <Skeleton className="h-4 w-1/3" />
+                <div key={i} className="rounded-2xl overflow-hidden">
+                  <Skeleton className="aspect-[4/5] w-full rounded-2xl" />
+                  <div className="pt-3 space-y-2 px-1">
+                    <Skeleton className="h-4 w-4/5" />
+                    <Skeleton className="h-5 w-1/3" />
                   </div>
                 </div>
               ))}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="size-16 rounded-full bg-[#e6f7f2] flex items-center justify-center mx-auto mb-5">
-                <FontAwesomeIcon icon={faEye} className="text-2xl text-[#00a67d]" />
+            <div className="py-24 text-center">
+              <div className="size-20 rounded-2xl bg-[#f0fdf9] flex items-center justify-center mx-auto mb-6">
+                <FontAwesomeIcon icon={faEye} className="text-3xl text-[#00a67d]" />
               </div>
-              <h3 className="text-lg font-semibold text-[#333333] mb-2" style={{ fontFamily: "var(--font-poppins)" }}>
+              <h3
+                className="text-xl font-bold text-[#1a1a2e] mb-3"
+                style={{ fontFamily: "var(--font-poppins)" }}
+              >
                 No templates found
               </h3>
-              <p className="text-sm text-[#999999] max-w-sm mx-auto">
+              <p className="text-sm text-[#8e8ea0] max-w-sm mx-auto leading-relaxed">
                 {searchQuery
                   ? `No results for "${searchQuery}". Try a different search term.`
                   : "No templates match your current filters. Try adjusting them."}
               </p>
               <Button
                 variant="outline"
-                className="mt-4 gap-1.5"
+                className="mt-6 gap-2 rounded-xl border-[#00a67d] text-[#00a67d] hover:bg-[#00a67d] hover:text-white"
                 onClick={clearFilters}
               >
                 Clear All Filters
@@ -446,39 +447,60 @@ function ShopContent() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 {displayedProducts.map((product) => (
                   <div
                     key={product.id}
-                    className="group cursor-pointer"
+                    className="product-card group cursor-pointer bg-white rounded-2xl border border-[#f0f0f3] hover:border-[#00a67d]/20 overflow-hidden"
                     onClick={() => handleCardClick(product)}
                   >
-                    <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f5f5] rounded-lg sm:rounded-xl">
+                    {/* Image */}
+                    <div className="relative aspect-[4/5] overflow-hidden bg-[#f8f8fa]">
                       <Image
                         src={product.imageUrl}
                         alt={product.title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg sm:rounded-xl" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {product.featured && (
-                        <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#e67e22] text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
-                          ★ Featured
+                        <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur-sm text-[#e67e22] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-[#e67e22]/10">
+                          <FontAwesomeIcon icon={faStar} className="text-[0.5rem]" />
+                          Featured
                         </span>
                       )}
+                      {/* Quick view overlay */}
+                      <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2.5 text-center shadow-lg">
+                          <span className="text-xs font-bold text-[#1a1a2e] tracking-wide">View Template</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="pt-2 sm:pt-2.5 px-0.5">
-                      <h3 className="font-medium text-[13px] sm:text-sm text-[#333333] line-clamp-2 leading-snug group-hover:text-[#00a67d] transition-colors">
+
+                    {/* Card info */}
+                    <div className="p-4 sm:p-5">
+                      <h3
+                        className="font-semibold text-[13px] sm:text-sm text-[#1a1a2e] line-clamp-2 leading-snug group-hover:text-[#00a67d] transition-colors"
+                        style={{ fontFamily: "var(--font-poppins)" }}
+                      >
                         {product.title}
                       </h3>
-                      <span className="block text-[15px] sm:text-lg font-bold text-[#222222] mt-1" style={{ fontFamily: "var(--font-poppins)" }}>
-                        ${product.price}
-                      </span>
-                      <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] sm:text-[11px] font-medium text-white bg-[#00a67d] px-2 py-0.5 rounded-full">
-                        <FontAwesomeIcon icon={faDownload} className="text-[0.5rem]" />
-                        Canva Template
-                      </span>
+                      <p className="text-[11px] text-[#8e8ea0] mt-1.5 font-medium uppercase tracking-wider">
+                        {product.category}
+                      </p>
+                      <div className="flex items-center justify-between mt-3">
+                        <span
+                          className="text-lg sm:text-xl font-extrabold text-[#1a1a2e]"
+                          style={{ fontFamily: "var(--font-poppins)" }}
+                        >
+                          ${product.price}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#00a67d] bg-[#f0fdf9] px-2.5 py-1 rounded-full border border-[#e6f7f2]">
+                          <FontAwesomeIcon icon={faDownload} className="text-[0.45rem]" />
+                          Canva
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -486,15 +508,15 @@ function ShopContent() {
 
               {/* Load More */}
               {hasMore && (
-                <div className="mt-8 text-center">
+                <div className="mt-12 text-center">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="px-8 rounded-full h-11 text-sm font-semibold border-[#00a67d] text-[#00a67d] hover:bg-[#00a67d] hover:text-white"
+                    className="px-10 rounded-xl h-12 text-sm font-bold border-[#00a67d] text-[#00a67d] hover:bg-[#00a67d] hover:text-white hover:shadow-lg hover:shadow-[#00a67d]/20 transition-all duration-300"
                     onClick={() => setDisplayCount((prev) => prev + PRODUCTS_PER_PAGE)}
                   >
                     Load More Templates
-                    <span className="ml-2 text-xs text-[#999999]">
+                    <span className="ml-2 text-xs opacity-60">
                       ({filteredProducts.length - displayCount} remaining)
                     </span>
                   </Button>

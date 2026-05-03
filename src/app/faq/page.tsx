@@ -123,23 +123,23 @@ export default function FAQPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#f8f5f2] py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2] py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h1
-            className="text-3xl md:text-4xl font-bold text-[#333333] mb-4"
+            className="text-3xl md:text-4xl font-bold tracking-tight text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Frequently Asked Questions
           </h1>
-          <p className="text-[#666666] text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-[#555770] text-base md:text-lg max-w-2xl mx-auto">
             Find quick answers to the most common questions about EnarMart, our templates, licensing, and more.
           </p>
         </div>
       </section>
 
       {/* Category Tabs */}
-      <section className="py-8 border-b border-[#e5e5e5]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-8 border-b border-[#e8e8ed]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             {faqCategories.map((cat) => (
               <button
@@ -151,7 +151,7 @@ export default function FAQPage() {
                 className={`shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors cursor-pointer ${
                   activeCategory === cat.name
                     ? "bg-[#00a67d] text-white"
-                    : "bg-[#f5f5f5] text-[#666666] hover:bg-[#e5e5e5]"
+                    : "bg-[#f5f5f5] text-[#555770] hover:bg-[#e8e8ed]"
                 }`}
               >
                 {cat.name}
@@ -162,14 +162,14 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Content */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
+      <section className="py-14 md:py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           {currentCategory && (
             <div className="space-y-3">
               {currentCategory.questions.map((faq, index) => (
                 <div
                   key={index}
-                  className="border border-[#e5e5e5] rounded-xl overflow-hidden"
+                  className="border border-[#e8e8ed] rounded-xl overflow-hidden"
                 >
                   <button
                     onClick={() =>
@@ -178,13 +178,13 @@ export default function FAQPage() {
                     className="w-full flex items-center justify-between p-5 text-left hover:bg-[#fafafa] transition-colors cursor-pointer"
                   >
                     <h3
-                      className="text-base font-medium text-[#333333] pr-4"
+                      className="text-base font-medium text-[#1a1a2e] pr-4"
                       style={{ fontFamily: "var(--font-poppins)" }}
                     >
                       {faq.q}
                     </h3>
                     <svg
-                      className={`w-5 h-5 text-[#999999] shrink-0 transition-transform duration-200 ${
+                      className={`w-5 h-5 text-[#8e8ea0] shrink-0 transition-transform duration-200 ${
                         openIndex === index ? "rotate-180" : ""
                       }`}
                       fill="none"
@@ -195,8 +195,8 @@ export default function FAQPage() {
                     </svg>
                   </button>
                   {openIndex === index && (
-                    <div className="px-5 pb-5 border-t border-[#e5e5e5]">
-                      <p className="text-[#666666] text-sm leading-relaxed pt-4">
+                    <div className="px-5 pb-5 border-t border-[#e8e8ed]">
+                      <p className="text-[#555770] text-sm leading-relaxed pt-4">
                         {faq.a}
                       </p>
                     </div>
@@ -209,15 +209,15 @@ export default function FAQPage() {
       </section>
 
       {/* Still Have Questions */}
-      <section className="py-12 md:py-16 bg-[#f8f5f2]">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+      <section className="py-14 md:py-20 bg-gradient-to-br from-[#f0fdf9] via-[#f8f5f2] to-[#e6f7f2]">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
           <h2
-            className="text-xl md:text-2xl font-semibold text-[#333333] mb-4"
+            className="text-xl md:text-2xl font-semibold text-[#1a1a2e] mb-4"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Still Have Questions?
           </h2>
-          <p className="text-[#666666] mb-6 max-w-lg mx-auto">
+          <p className="text-[#555770] mb-6 max-w-lg mx-auto">
             We&apos;re here to help. Browse our Help Center for detailed guides or reach out to our support team directly.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -229,7 +229,7 @@ export default function FAQPage() {
             </a>
             <a
               href="/help"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-[#e5e5e5] hover:border-[#00a67d]/30 text-[#333333] font-semibold rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-[#e8e8ed] hover:border-[#00a67d]/30 text-[#1a1a2e] font-semibold rounded-full transition-colors"
             >
               Help Center
             </a>
